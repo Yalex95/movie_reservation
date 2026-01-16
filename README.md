@@ -79,3 +79,5 @@ pnpm i -D eslint @antfu/eslint-config
 
 pnpm dlx nuxi module add eslint
 ```
+tailwind
+daisy ui
