@@ -10,11 +10,15 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "dev:db": "turso dev --db-file local.db"
   },
   "dependencies": {
+    "@libsql/client": "^0.17.0",
     "@nuxt/eslint": "1.12.1",
     "@tailwindcss/vite": "^4.1.18",
+    "better-auth": "^1.4.13",
+    "drizzle-orm": "^0.45.1",
     "tailwindcss": "^4.1.18",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4",
@@ -25,6 +29,7 @@
     "@nuxt/icon": "2.1.1",
     "@types/node": "^25.0.9",
     "daisyui": "^5.5.14",
+    "drizzle-kit": "^0.31.8",
     "eslint": "^9.39.2",
     "eslint-plugin-format": "^1.1.0",
     "nuxt": "^4.2.2"
