@@ -3,7 +3,7 @@ import { index, int, integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 import { reservations } from "./reservations";
 import { role } from "./role";
-// TODO: add role
+
 export const user = sqliteTable("user", {
   id: text().primaryKey(),
   name: text().notNull(),

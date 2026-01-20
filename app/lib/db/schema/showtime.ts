@@ -5,7 +5,6 @@ import { cinema_room } from "./cinema-room";
 import { movie } from "./movie";
 import { pricing } from "./pricing";
 import { reservations } from "./reservations";
-import { seat } from "./seat";
 
 export const showtime = sqliteTable("showtime", {
   id: int().primaryKey({ autoIncrement: true }),
@@ -25,5 +24,5 @@ export const showtimeRelation = relations(showtime, ({ one, many }) => ({
   }),
   reservations: many(reservations),
   pricing: many(pricing),
-  // seat: many(seat), 
+
 }));
