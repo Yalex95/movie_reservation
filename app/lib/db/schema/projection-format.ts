@@ -7,6 +7,6 @@ export const  projection_format = sqliteTable("format", {
   id: int().primaryKey({ autoIncrement: true }),
   format: text(),
 });
-export const movieFormatRelations = relations( projection_format, ({ many }) => ({
+export const projectionFormatRelations = relations( projection_format, ({ many }) => ({
   movies: many(movie_projection_formats),
 }));

@@ -4,7 +4,7 @@ import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { cast } from "./cast";
 import { genere } from "./genere";
 import { language } from "./language";
-import { projection_format } from "./movie-format";
+import { projection_format } from "./projection-format";
 import { showtime } from "./showtime";
 
 export const movie = sqliteTable("movie", {
