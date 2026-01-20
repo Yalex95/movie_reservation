@@ -25,5 +25,5 @@ export const showtimeRelation = relations(showtime, ({ one, many }) => ({
   }),
   reservations: many(reservations),
   pricing: many(pricing),
-  seat: many(seat),
+  // seat: many(seat), 
 }));

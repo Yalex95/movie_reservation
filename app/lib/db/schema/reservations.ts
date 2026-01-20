@@ -18,5 +18,10 @@ export const reservationsRelation = relations(reservations, ({ one, many }) => (
     fields: [reservations.showtime_id],
     references: [showtime.id],
   }),
-  seats: many(seat_reservation),
+  seats_reservation: many(seat_reservation),
+  user: one(user, {
+    fields: [reservations.user_id],
+    references: [user.id],
+  }),
+
 }));

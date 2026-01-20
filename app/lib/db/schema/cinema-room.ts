@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import { int, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+import { seat } from "./seat";
 import { showtime } from "./showtime";
 
 export const cinema_room = sqliteTable("cinema_room", {
@@ -13,4 +14,5 @@ export const cinema_room = sqliteTable("cinema_room", {
 
 export const cinemaRoomRelations = relations(cinema_room, ({ many }) => ({
   showtime: many(showtime),
+  seats: many(seat),
 }));
