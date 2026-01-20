@@ -1,6 +1,9 @@
 import { relations, sql } from "drizzle-orm";
-import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, int, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+import { reservations } from "./reservations";
+import { role } from "./role";
+// TODO: add role
 export const user = sqliteTable("user", {
   id: text().primaryKey(),
   name: text().notNull(),
@@ -9,6 +12,9 @@ export const user = sqliteTable("user", {
     .default(false)
     .notNull(),
   image: text(),
+  role_id: int().notNull().references(() => role.id),
+  phone: text().unique(),
+  is_active: integer({ mode: "boolean" }).default(false).notNull(),
   createdAt: integer({ mode: "timestamp_ms" })
     .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
     .notNull(),
@@ -87,9 +93,14 @@ export const verification = sqliteTable(
   table => [index("verification_identifier_idx").on(table.identifier)],
 );
 
-export const userRelations = relations(user, ({ many }) => ({
+export const userRelations = relations(user, ({ many, one }) => ({
   sessions: many(session),
   accounts: many(account),
+  reservations: many(reservations),
+  role: one(role, {
+    fields: [user.role_id],
+    references: [role.id],
+  }),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
