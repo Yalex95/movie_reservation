@@ -10,7 +10,7 @@ export const reservations = sqliteTable("reservations", {
   user_id: int().notNull().references(() => user.id),
   showtime_id: int().notNull().references(() => showtime.id),
   status: text(),
-  createdAt: int().notNull().$default(() => Date.now()),
+  createdAt: int("created_at").notNull().$default(() => Date.now()),
 });
 
 export const reservationsRelation = relations(reservations, ({ one, many }) => ({

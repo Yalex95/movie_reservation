@@ -1,5 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import { index, int, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { createInsertSchema } from "drizzle-zod";
+import z from "zod";
 
 import { reservations } from "./reservations";
 import { role } from "./role";
@@ -14,11 +16,12 @@ export const user = sqliteTable("user", {
   image: text(),
   role_id: int().notNull().references(() => role.id),
   phone: text().unique(),
+  // TODO: add avatar
   is_active: integer({ mode: "boolean" }).default(false).notNull(),
-  createdAt: integer({ mode: "timestamp_ms" })
+  createdAt: integer("created_at", { mode: "timestamp_ms" })
     .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
     .notNull(),
-  updatedAt: integer({ mode: "timestamp_ms" })
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
     .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
@@ -30,7 +33,7 @@ export const session = sqliteTable(
     id: text("id").primaryKey(),
     expiresAt: integer({ mode: "timestamp_ms" }).notNull(),
     token: text().notNull().unique(),
-    createdAt: integer({ mode: "timestamp_ms" })
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .notNull(),
     updatedAt: integer("updated_at", { mode: "timestamp_ms" })
@@ -65,10 +68,10 @@ export const account = sqliteTable(
     }),
     scope: text(),
     password: text(),
-    createdAt: integer({ mode: "timestamp_ms" })
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .notNull(),
-    updatedAt: integer({ mode: "timestamp_ms" })
+    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
   },
@@ -82,10 +85,10 @@ export const verification = sqliteTable(
     identifier: text().notNull(),
     value: text().notNull(),
     expiresAt: integer({ mode: "timestamp_ms" }).notNull(),
-    createdAt: integer({ mode: "timestamp_ms" })
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .notNull(),
-    updatedAt: integer({ mode: "timestamp_ms" })
+    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
@@ -116,3 +119,52 @@ export const accountRelations = relations(account, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+// validation scheme to insert an user
+export const insertUserSchema = createInsertSchema(user, {
+  name: field =>
+    field.min(1, "Name is required").max(100, "Name cannot have more than 100 char"),
+
+  email: field =>
+    field
+      .min(1, "Email is required")
+      .max(255, "Email cannot have more than 255 char")
+      .pipe(
+        z.email({
+          message: "Invalid email",
+        }),
+      ),
+}).omit({
+  id: true,
+  emailVerified: true,
+  image: true,
+  role_id: true,
+  is_active: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// schema for account
+export const insertAccoutSchema = z.object({
+  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La contraseña debe contener al menos una mayúscula, una minúscula y un número"),
+});
+
+// merge accout and user
+export const registerSchema = insertUserSchema.extend(insertAccoutSchema.shape).extend({ confirmPassword: z.string() }).refine(data => data.password === data.confirmPassword, {
+  message: "Las contraseñas no coinciden",
+  path: ["confirmPassword"],
+});
+// Esquema para login
+export const loginSchema = z.object({
+  email: z.string().min(1, "El email es requerido").pipe(
+    z.email({
+      message: "Invalid email",
+    }),
+  ),
+  password: z.string().min(1, "La contraseña es requerida"),
+});
+
+// Tipos
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type RegisterData = z.infer<typeof registerSchema>;
+export type LoginData = z.infer<typeof loginSchema>;

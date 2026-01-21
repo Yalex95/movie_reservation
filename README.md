@@ -81,3 +81,9 @@ pnpm dlx nuxi module add eslint
 ```
 tailwind
 daisy ui
+```bash
+pnpm drizzle-kit generate
+pnpm drizzle-kit migrate
+pnpm drizzle-kit studio
+turso dev --db-file local.db
+```
