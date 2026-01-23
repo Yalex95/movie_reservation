@@ -7,6 +7,7 @@ const props = defineProps<{ error?: string; label: string; type?: "text" | "text
     <legend class="fieldset-legend">
       {{ props.label }}
     </legend>
+
     <Field
       :as=" type === 'number' || 'password' ? 'input' : type || 'input' "
       :name="props.name"

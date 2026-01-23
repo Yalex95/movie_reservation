@@ -1,93 +1,56 @@
-<script setup lang="ts">
-import type { FetchError } from "ofetch";
+<script lang="ts" setup>
+const isSidebarOpen = ref(true);
+const route = useRoute();
+// onMounted(() => {
+//   isSidebarOpen.value = localStorage.getItem("isSidebarOpen") === "true";
+// });
 
-import { toTypedSchema } from "@vee-validate/zod";
-
-import { authClient } from "~/lib/auth-client";
-import { registerSchema } from "~/lib/db/schema";
-
-const loading = ref(false);
-const session = authClient.useSession();
-
-const { handleSubmit, errors, setErrors } = useForm({
-  validationSchema: toTypedSchema(registerSchema),
-  initialValues: {
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  },
-});
-const submitError = ref("");
-const onSubmit = handleSubmit(async (values) => {
-  loading.value = true;
-  try {
-    submitError.value = "";
-    // fetch
-    await authClient.signUp.email({
-      email: values.email,
-      password: values.password,
-      name: values.name,
-    });
-  }
-  catch (e) {
-    const error = e as FetchError;
-    if (error.data?.data) {
-      setErrors(error.data?.data);
-    }
-    submitError.value = error.data?.statusMessage || error.statusMessage || "An unknown error occured.";
-  }
-  loading.value = false;
-});
+function toggleSidebar() {
+  isSidebarOpen.value = !isSidebarOpen.value;
+  localStorage.setItem("isSidebarOpen", isSidebarOpen.value.toString());
+}
 </script>
 
 <template>
-  <div class="container max-w-md mx-auto p-4">
-    <form class="flex flex-col gap-2" @submit.prevent="onSubmit">
-      <AppFormField
-        :error="errors.name"
-        label="Name"
-        name="name"
-        :disabled="loading"
-      />
-      <AppFormField
-        :error="errors.email"
-        label="email"
-        name="email"
-        :disabled="loading"
-      />
-      <AppFormField
-        :error="errors.password"
-        label="password"
-        name="password"
-        type="password"
-        :disabled="loading"
-      />
-      <AppFormField
-        :error="errors.confirmPassword"
-        label="confirmPassword"
-        name="confirmPassword"
-        :disabled="loading"
-      />
-      <button
-        type="submit"
-        class="btn btn-primary"
-        :disabled="loading"
+  <div class="flex-1 flex min-h-0">
+    <div class="bg-base-100 transition-all duration-300 shrink-0" :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }">
+      <div
+        class="flex hover:cursor-pointer hover:bg-base-200 p-2"
+        :class="{ 'justify-center': !isSidebarOpen, 'justify-end': isSidebarOpen }"
+        @click="toggleSidebar"
       >
-        Add
-        <span v-if="loading" class="loading loading-spinner loading-xs" />
+        <Icon
+          v-if="isSidebarOpen"
+          name="tabler:chevron-left"
+          size="32"
+        />
         <Icon
           v-else
-          name="tabler:circle-plus-filled"
-          size="24"
+          name="tabler:chevron-right"
+          size="32"
         />
-      </button>
-    </form>
-    <div>
-      <pre>{{ session.data }}</pre>
-      <button v-if="session.data" @click="authClient.signOut()">
-        Sign out
-      </button>
+      </div>
+      <div class="flex flex-col ">
+        <!-- <SidebarButton
+          v-for="item in sidebarStore.sidebarTopItems"
+          :key="item.id"
+          :show-label="isSidebarOpen"
+          :label="item.label"
+          :icon="item.icon"
+          :href="item.href"
+          :to="item.to"
+        /> -->
+
+        <div class="divider" />
+
+        <!-- <SidebarButton
+          :show-label="isSidebarOpen"
+          label="Sign Out"
+          icon="tabler:logout"
+          href="/sign-out"
+        /> -->
+      </div>
     </div>
-  </div>
+    <AppMovie />
+  </div>                                                                                                                                                                                                                                                                  
 </template>

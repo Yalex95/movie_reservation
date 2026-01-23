@@ -13,7 +13,7 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
-  modules: ["@nuxt/eslint", "@nuxt/icon", "@vee-validate/nuxt"],
+  modules: ["@nuxt/eslint", "@nuxt/icon", "@vee-validate/nuxt", "@pinia/nuxt"],
   eslint: {
     config: {
       standalone: false,

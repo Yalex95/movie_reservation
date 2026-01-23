@@ -14,9 +14,8 @@ export const user = sqliteTable("user", {
     .default(false)
     .notNull(),
   image: text(),
-  role_id: int().notNull().references(() => role.id),
+  role_id: int().notNull().default(1).references(() => role.id),
   phone: text().unique(),
-  // TODO: add avatar
   is_active: integer({ mode: "boolean" }).default(false).notNull(),
   createdAt: integer("created_at", { mode: "timestamp_ms" })
     .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
@@ -31,7 +30,7 @@ export const session = sqliteTable(
   "session",
   {
     id: text("id").primaryKey(),
-    expiresAt: integer({ mode: "timestamp_ms" }).notNull(),
+    expiresAt: integer("expires_at",{ mode: "timestamp_ms" }).notNull(),
     token: text().notNull().unique(),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
@@ -39,9 +38,9 @@ export const session = sqliteTable(
     updatedAt: integer("updated_at", { mode: "timestamp_ms" })
       .$onUpdate(() => /* @__PURE__ */ new Date())
       .notNull(),
-    ipAddress: text(),
-    userAgent: text(),
-    userId: text()
+    ipAddress: text("ip_address"),
+    userAgent: text("user_agent"),
+    userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
   },
@@ -52,22 +51,22 @@ export const account = sqliteTable(
   "account",
   {
     id: text().primaryKey(),
-    accountId: text().notNull(),
-    providerId: text().notNull(),
-    userId: text()
+    accountId: text("account_id").notNull(),
+    providerId: text("provider_id").notNull(),
+    userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-    accessToken: text(),
-    refreshToken: text(),
-    idToken: text(),
-    accessTokenExpiresAt: integer({
+    accessToken: text("access_token"),
+    refreshToken: text("refresh_token"),
+    idToken: text("id_token"),
+    accessTokenExpiresAt: integer("access_token_expires_at",{
       mode: "timestamp_ms",
     }),
-    refreshTokenExpiresAt: integer({
+    refreshTokenExpiresAt: integer("refresh_token_expires_at",{
       mode: "timestamp_ms",
     }),
     scope: text(),
-    password: text(),
+    password: text({ length: 512 }),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .notNull(),
@@ -84,7 +83,7 @@ export const verification = sqliteTable(
     id: text().primaryKey(),
     identifier: text().notNull(),
     value: text().notNull(),
-    expiresAt: integer({ mode: "timestamp_ms" }).notNull(),
+    expiresAt: integer("expires_at",{ mode: "timestamp_ms" }).notNull(),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .notNull(),
