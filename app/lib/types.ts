@@ -7,3 +7,4 @@ export type navItems = {
   href?: string;// ? is optional
   to?: RouteLocationRaw;
 };
+

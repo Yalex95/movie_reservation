@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { authClient } from "~/lib/auth-client";
+
 const authStore = useAuthStore();
 const route = useRoute();
 </script>
@@ -36,11 +38,19 @@ const route = useRoute();
     </div>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
-        <li><a>Movies</a></li>
+        <li>
+          <NuxtLink to="/">
+            Movies
+          </NuxtLink>
+        </li>
       </ul>
     </div>
     <div class="navbar-end">
-      <NuxtLink v-if="!authStore.loading && authStore.user" class="btn">
+      <NuxtLink
+        v-if="!authStore.loading && authStore.user"
+        class="btn"
+        @on-click="authClient.signOut"
+      >
         Sign out
       </NuxtLink>
       <NuxtLink
@@ -50,7 +60,11 @@ const route = useRoute();
       >
         Sign up
       </NuxtLink>
-      <NuxtLink v-if="route.path.includes('sign-up')" class="btn ">
+      <NuxtLink
+        v-if="route.path.includes('sign-up')"
+        class="btn "
+        to="/sign-in"
+      >
         Login
       </NuxtLink>
     </div>

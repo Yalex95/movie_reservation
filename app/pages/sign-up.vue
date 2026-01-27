@@ -45,8 +45,8 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="sign-up w-full md:p-4 px-4 py-10 flex flex-col items-center justify-center overflow-auto ">
-    <div class="container flex flex-col gap-10">
+  <div class="sign-up w-full  md:p-4 px-4 py-10 flex flex-col items-center justify-center overflow-auto ">
+    <div class="container flex flex-col gap-10 md:w-8/12">
       <div class="flex flex-col md:gap-0 gap-4">
         <h1 class="text-3xl font-bold">
           Join the Cinema Experience
@@ -101,10 +101,18 @@ const onSubmit = handleSubmit(async (values) => {
             />
           </div>
           <AppCheckBox
-            :legend-enabled="false"
-            label="I agree to the terms of service and Privacy policy"
             checkbox-class="checkbox-info border-gray-100 checkbox-sm"
-          />
+          >
+            <template #label>
+              <label class="fieldset-legend">
+                I agree to the <NuxtLink to="/" class="text-blue-500">
+                  Terms of service
+                </NuxtLink> and <NuxtLink to="/" class="text-blue-500">
+                  Privacy Policy
+                </NuxtLink>, including receipt od promotianal movie updatre
+              </label>
+            </template>
+          </AppCheckBox>
           <!-- chechbox -->
           <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <button
@@ -115,21 +123,33 @@ const onSubmit = handleSubmit(async (values) => {
               <span v-if="loading" class="loading loading-spinner loading-xs" />
             </button>
             <p class="text-sm md:text-start text-center text-gray-300 md:col-span-3 my-auto">
-              Already have an account? <NuxtLink class="font-semibold" to="/sign-in">
+              Already have an account? <NuxtLink class="font-semibold text-blue-500" to="/sign-in">
                 Login here
               </NuxtLink>
             </p>
           </div>
         </form>
       </div>
-     <div class="mt-4 ">
-       <p class="text-center">2026 CinemaSystem Management Portal. All rights reserved</p>
-       <ul class="inline-flex gap-4 items-center justify-center w-full">
-         <li><NuxtLink to="/support">Support</NuxtLink></li>
-         <li><NuxtLink to="/support">Policy</NuxtLink></li>
-         <li><NuxtLink to="/support">Privacy</NuxtLink></li>
-      </ul>
-     </div>
+      <div class="mt-4 ">
+        <p class="text-center">
+          2026 CinemaSystem Management Portal. All rights reserved
+        </p>
+        <ul class="inline-flex gap-4 items-center justify-center w-full">
+          <li>
+            <NuxtLink to="/" />
+          </li>
+          <li>
+            <NuxtLink to="/">
+              Policy
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/">
+              Privacy
+            </NuxtLink>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -140,12 +160,4 @@ const onSubmit = handleSubmit(async (values) => {
     linear-gradient(rgb(1 69 107 / 68%), rgb(0 0 0 / 81%)),
     url(./assets/cinema_vip.jpg) center / cover no-repeat;
 }
-/* .sign-up::before {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  content: "";
-  background-color: rgba(0, 0, 0, 0.39);
-  z-index: -1;
-} */
 </style>

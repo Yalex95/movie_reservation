@@ -1,3 +1,7 @@
+<script lang="ts" setup>
+const props = defineProps<{ placeHolder: string }>();
+</script>
+
 <template>
   <label class="input">
     <svg
@@ -22,8 +26,7 @@
     </svg>
     <input
       type="search"
-      required
-      placeholder="Search"
+      :placeholder="placeHolder"
     >
   </label>
 </template>

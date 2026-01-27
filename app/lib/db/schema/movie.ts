@@ -90,3 +90,5 @@ export const movieRelations = relations(movie, ({ many }) => ({
   projection_formats: many(movie_projection_formats),
   showtimes: many(showtime),
 }));
+
+export type selectMovie = typeof movie.$inferSelect;

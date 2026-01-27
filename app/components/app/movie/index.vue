@@ -1,6 +1,12 @@
+<script setup lang="ts">
+const moviesStore = useMovieStore();
+const { movies } = storeToRefs(moviesStore);
+// console.warn(movies);
+</script>
+
 <template>
-  <div class="container mx-auto py-4 px-6  flex-col flex flex-1 min-h-0 overflow-auto ">
+  <div class="container mx-auto py-10 px-6  flex-col flex flex-1 min-h-0 overflow-auto ">
     <AppMovieFilter />
-    <AppMovieGrid :movies="['movie','movie','movie','movie']" />
+    <!-- <AppMovieGrid :movies="movies" /> -->
   </div>
 </template>
