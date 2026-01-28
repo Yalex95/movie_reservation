@@ -9,7 +9,7 @@ export const cast = sqliteTable("cast", {
   actor_id: int().notNull().references(() => actor.id, { onDelete: "cascade" }),
   movie_id: int().notNull().references(() => movie.id, { onDelete: "cascade" }),
   character_name: text().notNull(),
-  roleOrder: text(),
+  roleOrder: text("role_order").notNull(),
 
 });
 

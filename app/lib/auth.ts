@@ -1,12 +1,14 @@
-import { sendUserVerificationEmail } from "~~/server/utils/send-email-verification";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { admin } from "better-auth/plugins";
 
+import { sendUserVerificationEmail } from "../../server/utils/send-email-verification";
 import db from "./db/index";
 import * as schema from "./db/schema";
 import env from "./env";
 
 export const auth = betterAuth({
+
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
   database: drizzleAdapter(db, {
@@ -32,7 +34,7 @@ export const auth = betterAuth({
     sendOnSignIn: true,
 
     // Callback después de verificar el email
-  
+
   },
 
   // Configuración del usuario
@@ -44,13 +46,7 @@ export const auth = betterAuth({
         input: false,
         database: true,
       },
-      role_id: {
-        type: "number",
-        required: false,
-        default: 1,
-        input: false,
-        database: true,
-      },
+     
       is_active: {
         type: "boolean",
         required: false,
@@ -64,6 +60,8 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 7, // 7 días
     updateAge: 60 * 60 * 24, // Actualizar cada 24 horas
   },
-
+  plugins: [
+    admin({defaultRole:"regular", adminRoles:["admin"]}),
+  ],
 });
 // type Session = typeof auth.$Infer.Session;

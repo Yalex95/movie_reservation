@@ -4,7 +4,6 @@ import { createInsertSchema } from "drizzle-zod";
 import z from "zod";
 
 import { reservations } from "./reservations";
-import { role } from "./role";
 
 export const user = sqliteTable("user", {
   id: text().primaryKey(),
@@ -14,9 +13,6 @@ export const user = sqliteTable("user", {
     .default(false)
     .notNull(),
   image: text(),
-  role_id: int().notNull().default(1).references(() => role.id),
-  phone: text().unique(),
-  is_active: integer({ mode: "boolean" }).default(false).notNull(),
   createdAt: integer("created_at", { mode: "timestamp_ms" })
     .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
     .notNull(),
@@ -24,14 +20,20 @@ export const user = sqliteTable("user", {
     .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
+  role: text("role"),
+  banned: integer("banned", { mode: "boolean" }).default(false),
+  banReason: text("ban_reason"),
+  banExpires: integer("ban_expires", { mode: "timestamp_ms" }),
+  phone: text().unique(),
+  is_active: integer({ mode: "boolean" }).default(false).notNull(),
 });
 
 export const session = sqliteTable(
   "session",
   {
     id: text("id").primaryKey(),
-    expiresAt: integer("expires_at",{ mode: "timestamp_ms" }).notNull(),
-    token: text().notNull().unique(),
+    expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
+    token: text("token").notNull().unique(),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .notNull(),
@@ -43,6 +45,7 @@ export const session = sqliteTable(
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
+    impersonatedBy: text("impersonated_by"),
   },
   table => [index("session_userId_idx").on(table.userId)],
 );
@@ -50,7 +53,7 @@ export const session = sqliteTable(
 export const account = sqliteTable(
   "account",
   {
-    id: text().primaryKey(),
+    id: text("id").primaryKey(),
     accountId: text("account_id").notNull(),
     providerId: text("provider_id").notNull(),
     userId: text("user_id")
@@ -59,14 +62,14 @@ export const account = sqliteTable(
     accessToken: text("access_token"),
     refreshToken: text("refresh_token"),
     idToken: text("id_token"),
-    accessTokenExpiresAt: integer("access_token_expires_at",{
+    accessTokenExpiresAt: integer("access_token_expires_at", {
       mode: "timestamp_ms",
     }),
-    refreshTokenExpiresAt: integer("refresh_token_expires_at",{
+    refreshTokenExpiresAt: integer("refresh_token_expires_at", {
       mode: "timestamp_ms",
     }),
-    scope: text(),
-    password: text({ length: 512 }),
+    scope: text("scope"),
+    password: text("password"),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .notNull(),
@@ -80,10 +83,10 @@ export const account = sqliteTable(
 export const verification = sqliteTable(
   "verification",
   {
-    id: text().primaryKey(),
-    identifier: text().notNull(),
-    value: text().notNull(),
-    expiresAt: integer("expires_at",{ mode: "timestamp_ms" }).notNull(),
+    id: text("id").primaryKey(),
+    identifier: text("identifier").notNull(),
+    value: text("value").notNull(),
+    expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
       .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
       .notNull(),
@@ -95,14 +98,11 @@ export const verification = sqliteTable(
   table => [index("verification_identifier_idx").on(table.identifier)],
 );
 
-export const userRelations = relations(user, ({ many, one }) => ({
+export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
   reservations: many(reservations),
-  role: one(role, {
-    fields: [user.role_id],
-    references: [role.id],
-  }),
+
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -137,7 +137,6 @@ export const insertUserSchema = createInsertSchema(user, {
   id: true,
   emailVerified: true,
   image: true,
-  role_id: true,
   is_active: true,
   createdAt: true,
   updatedAt: true,

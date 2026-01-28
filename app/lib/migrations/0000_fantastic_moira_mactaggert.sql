@@ -31,6 +31,7 @@ CREATE TABLE `session` (
 	`ip_address` text,
 	`user_agent` text,
 	`user_id` text NOT NULL,
+	`impersonated_by` text,
 	FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
@@ -42,12 +43,14 @@ CREATE TABLE `user` (
 	`email` text NOT NULL,
 	`email_verified` integer DEFAULT false NOT NULL,
 	`image` text,
-	`role_id` integer DEFAULT 1 NOT NULL,
-	`phone` text,
-	`is_active` integer DEFAULT false NOT NULL,
 	`created_at` integer DEFAULT (cast(unixepoch('subsecond') * 1000 as integer)) NOT NULL,
 	`updated_at` integer DEFAULT (cast(unixepoch('subsecond') * 1000 as integer)) NOT NULL,
-	FOREIGN KEY (`role_id`) REFERENCES `role`(`id`) ON UPDATE no action ON DELETE no action
+	`role` text,
+	`banned` integer DEFAULT false,
+	`ban_reason` text,
+	`ban_expires` integer,
+	`phone` text,
+	`is_active` integer DEFAULT false NOT NULL
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `user_email_unique` ON `user` (`email`);--> statement-breakpoint
@@ -67,7 +70,7 @@ CREATE TABLE `cast` (
 	`actor_id` integer NOT NULL,
 	`movie_id` integer NOT NULL,
 	`character_name` text NOT NULL,
-	`role_order` text,
+	`role_order` text NOT NULL,
 	FOREIGN KEY (`actor_id`) REFERENCES `actor`(`id`) ON UPDATE no action ON DELETE cascade,
 	FOREIGN KEY (`movie_id`) REFERENCES `movie`(`id`) ON UPDATE no action ON DELETE cascade
 );
@@ -131,13 +134,6 @@ CREATE TABLE `movie_projection_formats` (
 	FOREIGN KEY (`format_id`) REFERENCES `format`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE TABLE `permission` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`name` text NOT NULL,
-	`module` text
-);
---> statement-breakpoint
-CREATE UNIQUE INDEX `permission_name_unique` ON `permission` (`name`);--> statement-breakpoint
 CREATE TABLE `pricing` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`showtime_id` integer NOT NULL,
@@ -162,20 +158,6 @@ CREATE TABLE `reservations` (
 	FOREIGN KEY (`showtime_id`) REFERENCES `showtime`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
-CREATE TABLE `role` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`role` text
-);
---> statement-breakpoint
-CREATE TABLE `role_permissions` (
-	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`permission_id` integer NOT NULL,
-	`role_id` integer NOT NULL,
-	FOREIGN KEY (`permission_id`) REFERENCES `permission`(`id`) ON UPDATE no action ON DELETE cascade,
-	FOREIGN KEY (`role_id`) REFERENCES `role`(`id`) ON UPDATE no action ON DELETE cascade
-);
---> statement-breakpoint
-CREATE UNIQUE INDEX `unique_role_permission` ON `role_permissions` (`role_id`,`permission_id`);--> statement-breakpoint
 CREATE TABLE `seat` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`cinema_room_id` integer NOT NULL,

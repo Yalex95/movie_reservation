@@ -33,8 +33,8 @@ export const movie = sqliteTable("movie", {
 // movie generes
 export const movie_genres = sqliteTable("movie_genres", {
   id: int().primaryKey({ autoIncrement: true }),
-  movieId: int().references(() => movie.id),
-  genreId: int().references(() => genere.id),
+  movieId: int("movie_id").references(() => movie.id),
+  genreId: int("genre_id").references(() => genere.id),
 });
 
 export const movieGeneresRelations = relations(movie_genres, ({ one }) => ({
@@ -51,8 +51,8 @@ export const movieGeneresRelations = relations(movie_genres, ({ one }) => ({
 // movie languages
 export const movie_languages = sqliteTable("movie_languages", {
   id: int().primaryKey({ autoIncrement: true }),
-  movieId: int().references(() => movie.id),
-  languageId: int().references(() => language.id),
+  movieId: int("movie_id").references(() => movie.id),
+  languageId: int("language_id").references(() => language.id),
 });
 
 export const movieLanguagesRelations = relations(movie_languages, ({ one }) => ({
@@ -69,8 +69,8 @@ export const movieLanguagesRelations = relations(movie_languages, ({ one }) => (
 // movie formats
 export const movie_projection_formats = sqliteTable("movie_projection_formats", {
   id: int().primaryKey({ autoIncrement: true }),
-  movieId: int().references(() => movie.id),
-  formatId: int().references(() => projection_format.id),
+  movieId: int("movie_id").references(() => movie.id),
+  formatId: int("format_id").references(() => projection_format.id),
 });
 export const movieFormatRelations = relations(movie_projection_formats, ({ one }) => ({
   movie: one(movie, {

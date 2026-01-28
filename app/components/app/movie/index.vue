@@ -1,6 +1,5 @@
 <script setup lang="ts">
-const moviesStore = useMovieStore();
-const { movies } = storeToRefs(moviesStore);
+
 // console.warn(movies);
 </script>
 
