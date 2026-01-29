@@ -25,6 +25,7 @@ const onSubmit = handleSubmit(async (values) => {
     const form = {
       email: values.email,
       password: values.password,
+      callbackURL: "/auth/callback",
     };
     const { data, error } = await authClient.signIn.email(form);
     console.warn(data, error);

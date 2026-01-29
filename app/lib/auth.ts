@@ -46,7 +46,7 @@ export const auth = betterAuth({
         input: false,
         database: true,
       },
-     
+
       is_active: {
         type: "boolean",
         required: false,
@@ -61,7 +61,6 @@ export const auth = betterAuth({
     updateAge: 60 * 60 * 24, // Actualizar cada 24 horas
   },
   plugins: [
-    admin({defaultRole:"regular", adminRoles:["admin"]}),
+    admin({ defaultRole: "regular", adminRoles: ["admin"] }),
   ],
 });
-// type Session = typeof auth.$Infer.Session;
