@@ -6,6 +6,11 @@ const authStore = useAuthStore();
 const isSidebarOpen = ref(true);
 const sidebarStore = useSidebarStore();
 const route = useRoute();
+const session = ref();
+
+onMounted(async () => {
+  session.value = await authClient.getSession();
+});
 effect(() => {
   if (route.path === "/") {
     sidebarStore.sidebarItems = [{
@@ -64,21 +69,19 @@ function toggleSidebar() {
         />
 
         <div class="divider" />
-
         <SidebarButton
-          v-if="authStore.user"
-          :show-label="isSidebarOpen"
-          label="Sign Out"
-          icon="tabler:logout"
-          href="/sign-out"
-          @on-click="authClient.signOut"
-        />
-        <SidebarButton 
-          v-if="!authStore.user"
+          v-if="!session?.data?.user"
           :show-label="isSidebarOpen"
           label="Login"
           icon="tabler:login"
           href="/sign-in"
+        />
+        <SidebarButton
+          v-else
+          :show-label="isSidebarOpen"
+          label="Sign Out"
+          icon="tabler:logout"
+          @click="signOut()"
         />
       </div>
     </div>

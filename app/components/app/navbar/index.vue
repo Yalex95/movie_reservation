@@ -1,19 +1,13 @@
 <script lang="ts" setup>
 import { authClient } from "~/lib/auth-client";
 
-const router = useRouter();
 const session = ref();
 onMounted(async () => {
   session.value = await authClient.getSession();
 });
 // const authStore = useAuthStore();
 const route = useRoute();
-async function signOut() {
-  const { data } = await authClient.signOut();
-  if (data?.success) {
-    router.push("/sign-in");
-  }
-}
+const auth = useAuthStore();
 </script>
 
 <template>
@@ -67,10 +61,7 @@ async function signOut() {
       <button
         v-else
         class="btn"
-        @click=" () => {
-          signOut()
-          // router.push('/')
-        }"
+        @click="auth.signOut()"
       >
         Sign out
       </button>

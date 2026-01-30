@@ -1,16 +1,5 @@
 <script setup lang="ts">
-import { authClient } from "~/lib/auth-client";
 
-const session = await authClient.getSession();
-// manage this with middleware
-if (session.data) {
-  if (session.data?.user.role === "admin") {
-    await navigateTo("/dashboard");
-  }
-  else {
-    await navigateTo("/");
-  }
-}
 </script>
 
 <template>

@@ -3,17 +3,18 @@ import type { FetchError } from "ofetch";
 
 import { toTypedSchema } from "@vee-validate/zod";
 
-import { authClient } from "~/lib/auth-client";
 import { loginSchema } from "~/lib/db/schema";
 
+const auth = useAuthStore();
 const loading = ref(false);
-// const session = authClient.useSession();
-
+// definePageMeta({
+//   ssr: false,
+// });
 const { handleSubmit, errors, setErrors } = useForm({
   validationSchema: toTypedSchema(loginSchema),
   initialValues: {
-    email: "",
-    password: "",
+    email: "yerisaguilarg@gmail.com",
+    password: "yerisDev1234#",
   },
 });
 const onSubmit = handleSubmit(async (values) => {
@@ -24,9 +25,11 @@ const onSubmit = handleSubmit(async (values) => {
       password: values.password,
       callbackURL: "/auth/callback",
     };
-    const { error } = await authClient.signIn.email(form);
-    if (error) {
-      throw error;
+    // const { error } = await authClient.signIn.email(form);
+    console.log(form);
+    const result = await auth.signIn(form);
+    if (result.error) {
+      throw result.error;
     }
   }
   catch (e) {
