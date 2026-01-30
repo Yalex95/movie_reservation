@@ -8,6 +8,7 @@ import { registerSchema } from "~/lib/db/schema";
 
 const loading = ref(false);
 const session = authClient.useSession();
+console.log(session);
 
 const { handleSubmit, errors, setErrors } = useForm({
   validationSchema: toTypedSchema(registerSchema),

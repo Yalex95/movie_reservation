@@ -8,7 +8,6 @@ import * as schema from "./db/schema";
 import env from "./env";
 
 export const auth = betterAuth({
-
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
   database: drizzleAdapter(db, {
@@ -20,24 +19,16 @@ export const auth = betterAuth({
       verification: schema.verification,
     },
   }),
-
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
-
   },
-
   emailVerification: {
     sendVerificationEmail: async ({ user, url }) => {
       void sendUserVerificationEmail(user, url);
     },
     sendOnSignIn: true,
-
-    // Callback después de verificar el email
-
   },
-
-  // Configuración del usuario
   user: {
     additionalFields: {
       phone: {
@@ -56,10 +47,7 @@ export const auth = betterAuth({
       },
     },
   },
-  session: {
-    expiresIn: 60 * 60 * 24 * 7, // 7 días
-    updateAge: 60 * 60 * 24, // Actualizar cada 24 horas
-  },
+
   plugins: [
     admin({ defaultRole: "regular", adminRoles: ["admin"] }),
   ],

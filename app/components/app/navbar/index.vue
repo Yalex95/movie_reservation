@@ -1,8 +1,19 @@
 <script lang="ts" setup>
 import { authClient } from "~/lib/auth-client";
 
-const authStore = useAuthStore();
+const router = useRouter();
+const session = ref();
+onMounted(async () => {
+  session.value = await authClient.getSession();
+});
+// const authStore = useAuthStore();
 const route = useRoute();
+async function signOut() {
+  const { data } = await authClient.signOut();
+  if (data?.success) {
+    router.push("/sign-in");
+  }
+}
 </script>
 
 <template>
@@ -47,26 +58,22 @@ const route = useRoute();
     </div>
     <div class="navbar-end">
       <NuxtLink
-        v-if="!authStore.loading && authStore.user"
+        v-if="!session?.data?.user"
+        class="btn "
+        :to="route.path.includes('sign-up') ? '/sign-in' : '/sign-up'"
+      >
+        {{ route.path.includes('sign-up') ? 'Login' : 'Sign up' }}
+      </NuxtLink>
+      <button
+        v-else
         class="btn"
-        @on-click="authClient.signOut"
+        @click=" () => {
+          signOut()
+          // router.push('/')
+        }"
       >
         Sign out
-      </NuxtLink>
-      <NuxtLink
-        v-else-if="!route.path.includes('sign-up')"
-        class="btn "
-        to="/sign-up"
-      >
-        Sign up
-      </NuxtLink>
-      <NuxtLink
-        v-if="route.path.includes('sign-up')"
-        class="btn "
-        to="/sign-in"
-      >
-        Login
-      </NuxtLink>
+      </button>
     </div>
   </div>
 </template>

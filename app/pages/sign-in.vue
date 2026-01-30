@@ -16,26 +16,26 @@ const { handleSubmit, errors, setErrors } = useForm({
     password: "",
   },
 });
-const submitError = ref("");
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true;
   try {
-    submitError.value = "";
-
     const form = {
       email: values.email,
       password: values.password,
       callbackURL: "/auth/callback",
     };
-    const { data, error } = await authClient.signIn.email(form);
-    console.warn(data, error);
+    const { error } = await authClient.signIn.email(form);
+    if (error) {
+      throw error;
+    }
   }
   catch (e) {
     const error = e as FetchError;
     if (error.data?.data) {
       setErrors(error.data?.data);
     }
-    submitError.value = error.data?.statusMessage || error.statusMessage || "An unknown error occured.";
+    if (error.message.includes("password"))
+      setErrors({ password: error.message, email: error.message });
   }
   loading.value = false;
 });
@@ -69,6 +69,7 @@ const onSubmit = handleSubmit(async (values) => {
           type="password"
           :disabled="loading"
         />
+
         <div class="flex gap-4 justify-between items-center">
           <AppCheckBox
             checkbox-class="checkbox-info border-gray-100 checkbox-sm"
@@ -97,7 +98,11 @@ const onSubmit = handleSubmit(async (values) => {
         </button>
       </form>
       <hr>
-      <p class="text-xs text-center">Don't have an account yet? <NuxtLink to="/sign-up" class="font-semibold underline underline-offset-2">Create an account</NuxtLink></p>
+      <p class="text-xs text-center">
+        Don't have an account yet? <NuxtLink to="/sign-up" class="font-semibold underline underline-offset-2">
+          Create an account
+        </NuxtLink>
+      </p>
     </div>
   </div>
 </template>
