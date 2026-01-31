@@ -2,14 +2,12 @@
 import type { FetchError } from "ofetch";
 
 import { toTypedSchema } from "@vee-validate/zod";
-
-import { loginSchema } from "~/lib/db/schema";
+import { authClient } from "~~/lib/auth-client";
+import { loginSchema } from "~~/lib/db/schema";
 
 const auth = useAuthStore();
 const loading = ref(false);
-// definePageMeta({
-//   ssr: false,
-// });
+
 const { handleSubmit, errors, setErrors } = useForm({
   validationSchema: toTypedSchema(loginSchema),
   initialValues: {
@@ -23,7 +21,6 @@ const onSubmit = handleSubmit(async (values) => {
     const form = {
       email: values.email,
       password: values.password,
-      callbackURL: "/auth/callback",
     };
     // const { error } = await authClient.signIn.email(form);
     console.log(form);
@@ -90,6 +87,7 @@ const onSubmit = handleSubmit(async (values) => {
         <button
           class="btn btn-info text-white"
           :disabled="loading"
+          type="submit"
         >
           Login
           <span v-if="loading" class="loading loading-spinner loading-xs" />

@@ -2,7 +2,7 @@ import type { User } from "better-auth";
 
 import { Resend } from "resend";
 
-import env from "../../app/lib/env";
+import env from "../../lib/env";
 
 const resend = new Resend(env.RESEND_API_KEY);
 

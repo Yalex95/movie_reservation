@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { selectMovie } from "~/lib/db/schema";
-
+import type { selectMovie } from "~~/lib/db/schema";
+// "/lib/db/schema"
 defineProps<{ movies: Array<selectMovie> }>();
 </script>
 

@@ -2,9 +2,8 @@
 import type { FetchError } from "ofetch";
 
 import { toTypedSchema } from "@vee-validate/zod";
-
-import { authClient } from "~/lib/auth-client";
-import { registerSchema } from "~/lib/db/schema";
+import { authClient } from "~~/lib/auth-client";
+import { registerSchema } from "~~/lib/db/schema";
 
 const loading = ref(false);
 const session = authClient.useSession();

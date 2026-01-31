@@ -1,4 +1,4 @@
-import { findMovies } from "~/lib/db/queries/movie";
+import { findMovies } from "~~/lib/db/queries/movie";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);

@@ -1,5 +1,5 @@
-import { auth } from "~/lib/auth";
-import { authClient } from "~/lib/auth-client";
+// import { auth } from "~~/lib/auth";
+// import { authClient } from "~~/lib/auth-client";
 
 export default defineNuxtRouteMiddleware((to, from) => {
   // const result = await useFetch("/api/auth/get-session");//this works
@@ -35,37 +35,35 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
   } */
   const authStore = useAuthStore();
-  authStore.init();
-  // ⏳ Espera a que Better Auth resuelva la sesión
+  // authStore.init();
+  const user = authStore.session?.data?.user;
+  console.log("Middleware user:", user?.role);
 
-  const user = authStore.user;
-  console.log("Middleware user:", user);
-/*
   if (!user) {
     if (to.path.startsWith("/dashboard")) {
       return navigateTo("/sign-in", { replace: true });
     }
-    return;
   }
-
-  if (user.role === "admin") {
-    if (
-      to.path === "/"
-      || to.path === "/sign-in"
-      || to.path === "/sign-up"
-      || to.path === "/auth/callback"
-    ) {
-      return navigateTo("/dashboard", { replace: true });
+  else {
+    if (user?.role === "admin") {
+      if (
+        to.path === "/"
+        || to.path === "/sign-in"
+        || to.path === "/sign-up"
+        || to.path === "/auth/callback"
+      ) {
+        return navigateTo("/dashboard", { replace: true });
+      }
     }
   }
 
-  if (user.role === "user") {
-    if (
-      to.path === "/sign-in"
-      || to.path === "/sign-up"
-      || to.path === "/auth/callback"
-    ) {
-      return navigateTo("/", { replace: true });
-    }
-  } */
+  // if (user.role === "user") {
+  //   if (
+  //     to.path === "/sign-in"
+  //     || to.path === "/sign-up"
+  //     || to.path === "/auth/callback"
+  //   ) {
+  //     return navigateTo("/", { replace: true });
+  //   }
+  // }
 });

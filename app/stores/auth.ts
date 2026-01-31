@@ -19,7 +19,6 @@ export const useAuthStore = defineStore("useAuthStore", () => {
   const loading = computed(() => session.value?.isPending);
 
   async function signIn(form: SignInForm) {
-    console.log("SignIn form:", form);
     await authClient.signIn.email({
       email: form.email,
       password: form.password,

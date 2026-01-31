@@ -7,7 +7,6 @@ export default function tryParseEnv<T extends ZodRawShape>(
   EnvSchema: ZodObject<T>,
   buildEnv: Record<string, string | undefined> = process.env,
 ) {
-  console.log("Trying to parse env:", buildEnv);
   try {
     EnvSchema.parse(buildEnv);
     console.log("✅ Environment variables parsed successfully!");

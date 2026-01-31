@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { authClient } from "~/lib/auth-client";
+import { authClient } from "~~/lib/auth-client";
 
 const session = ref();
 onMounted(async () => {
