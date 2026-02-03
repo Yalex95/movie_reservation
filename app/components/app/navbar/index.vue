@@ -5,9 +5,31 @@ const session = ref();
 onMounted(async () => {
   session.value = await authClient.getSession();
 });
-// const authStore = useAuthStore();
+const navbarStore = useNavbarStore();
 const route = useRoute();
 const auth = useAuthStore();
+effect(() => {
+  if (session.value) {
+    if (session.value.data.user.role === "admin") {
+      navbarStore.navbarItems = [{
+        id: "link-dashboard",
+        label: "Dashboard",
+        to: "/dashboard",
+      }];
+    }
+    else { // regular user
+      navbarStore.navbarItems = [{
+        id: "link-home",
+        label: "Home",
+        to: "/",
+      }, {
+        id: "link-bookings",
+        label: "My Bookings",
+        to: "/bookings",
+      }];
+    }
+  }
+});
 </script>
 
 <template>
@@ -43,14 +65,15 @@ const auth = useAuthStore();
     </div>
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
-        <li>
-          <NuxtLink to="/">
-            Movies
+        <li v-for="item in navbarStore.navbarItems" :key="item.id">
+          <NuxtLink :to="item.to">
+            {{ item.label }}
           </NuxtLink>
         </li>
       </ul>
     </div>
     <div class="navbar-end">
+      <AppThemeToggle />
       <NuxtLink
         v-if="!session?.data?.user"
         class="btn "
@@ -58,13 +81,43 @@ const auth = useAuthStore();
       >
         {{ route.path.includes('sign-up') ? 'Login' : 'Sign up' }}
       </NuxtLink>
-      <button
-        v-else
-        class="btn"
-        @click="auth.signOut()"
-      >
-        Sign out
-      </button>
+      <div v-else class="dropdown dropdown-end">
+        <div
+          tabindex="0"
+          role="button"
+          class="btn btn-ghost btn-circle avatar"
+          :class="{ 'avatar-placeholder': !session?.data?.user?.avatar } "
+        >
+          <div class="w-10 rounded-full bg-neutral text-neutral-content">
+            <img
+              v-if="session?.data?.user?.avatar"
+              :alt="session?.data?.user?.name || 'User avatar'"
+              :src="session?.data?.user?.avatar"
+            >
+            <span v-else>{{ session?.data?.user?.name?.charAt(0)?.toUpperCase() || 'U' }}</span>
+          </div>
+        </div>
+        <ul
+          tabindex="-1"
+          class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+        >
+          <li>
+            <NuxtLink to="/" class="justify-between">
+              Profile
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/">
+              Settings
+            </NuxtLink>
+          </li>
+          <li>
+            <button class="btn btn-neutral" @click="auth.signOut()">
+              Logout
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>

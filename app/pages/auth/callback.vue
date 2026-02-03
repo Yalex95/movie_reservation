@@ -1,5 +1,14 @@
 <script setup lang="ts">
-
+// const authStore = useAuthStore();
+// // manage this with middleware
+// if (authStore?.session?.data) {
+//   if (authStore?.session?.data?.user.role === "admin") {
+//     await navigateTo("/dashboard");
+//   }
+//   else {
+//     await navigateTo("/");
+//   }
+// }
 </script>
 
 <template>

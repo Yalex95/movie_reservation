@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-// console.warn(movies);
 </script>
 
 <template>

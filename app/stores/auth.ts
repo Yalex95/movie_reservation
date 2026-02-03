@@ -25,6 +25,7 @@ export const useAuthStore = defineStore("useAuthStore", () => {
       rememberMe: true,
       callbackURL: "/auth/callback",
     });
+    // await init();
   }
 
   async function signOut() {

@@ -81,7 +81,7 @@ function toggleSidebar() {
           :show-label="isSidebarOpen"
           label="Sign Out"
           icon="tabler:logout"
-          @click="signOut()"
+          @click="authStore.signOut()"
         />
       </div>
     </div>

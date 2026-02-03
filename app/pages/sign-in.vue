@@ -2,7 +2,6 @@
 import type { FetchError } from "ofetch";
 
 import { toTypedSchema } from "@vee-validate/zod";
-import { authClient } from "~~/lib/auth-client";
 import { loginSchema } from "~~/lib/db/schema";
 
 const auth = useAuthStore();
@@ -23,7 +22,7 @@ const onSubmit = handleSubmit(async (values) => {
       password: values.password,
     };
     // const { error } = await authClient.signIn.email(form);
-    console.log(form);
+ 
     const result = await auth.signIn(form);
     if (result.error) {
       throw result.error;
@@ -39,6 +38,7 @@ const onSubmit = handleSubmit(async (values) => {
   }
   loading.value = false;
 });
+
 </script>
 
 <template>

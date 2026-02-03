@@ -1,3 +1,5 @@
+import type { User } from "better-auth";
+
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { admin } from "better-auth/plugins";
@@ -7,6 +9,9 @@ import db from "./db/index";
 import * as schema from "./db/schema";
 import env from "./env";
 
+export type UserWithId = Omit<User, "id"> & {
+  id: number;
+};
 export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
