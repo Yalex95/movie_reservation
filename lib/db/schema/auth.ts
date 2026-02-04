@@ -27,7 +27,7 @@ export const user = sqliteTable("user", {
   phone: text().unique(),
   is_active: integer({ mode: "boolean" }).default(false).notNull(),
 });
-
+//add DOB
 export const session = sqliteTable(
   "session",
   {
@@ -161,8 +161,20 @@ export const loginSchema = z.object({
   ),
   password: z.string().min(1, "La contraseña es requerida"),
 });
+// Esquema para actualizar perfil
+export const updateProfileSchema = z.object({
+  name: z.string().min(1, "Name is required").max(100, "Name cannot have more than 100 char"),
+  email: z.string().min(1, "El email es requerido").pipe(
+    z.email({
+      message: "Invalid email",
+    }),
+  ),
+  phone: z.string().max(20, "Phone number cannot have more than 20 char").optional(),
+  image: z.string().max(255, "Image URL cannot have more than 255 char").optional(),
 
+});
 // Tipos
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type RegisterData = z.infer<typeof registerSchema>;
 export type LoginData = z.infer<typeof loginSchema>;
+export type UpdateProfileData = z.infer<typeof updateProfileSchema>;

@@ -8,3 +8,17 @@ export type navItems = {
   to?: RouteLocationRaw;
 };
 
+export type AppUser = {
+  id: string;
+  email: string;
+  name: string;
+  emailVerified: boolean;
+  image?: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+
+  // campos custom
+  phone?: string | null;
+  role?: string | null;
+  is_active?: boolean;
+};

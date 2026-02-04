@@ -8,16 +8,15 @@ const props = defineProps<{
   to?: RouteLocationRaw;
   showLabel: boolean;
   iconColor?: "text-accent" | "text-primary" | "text-secondary";
+  isActive?: boolean;
 }>();
-
-const route = useRoute();
 </script>
 
 <template>
   <div :class="{ 'tooltip  tooltip-right': !props.showLabel }" :data-tip="props.showLabel ? undefined : props.label">
     <NuxtLink
       :to="href || to"
-      :class="{ 'bg-base-200': route.path === props.href, 'justify-start': showLabel, 'justify-center': !showLabel }"
+      :class="{ 'bg-base-200': props.isActive, 'justify-start': showLabel, 'justify-center': !showLabel }"
       class="flex gap-2 p-2 cursor-pointer hover:bg-base-300 flex-nowrap"
     >
       <Icon

@@ -1,5 +1,7 @@
 import { createAuthClient } from "better-auth/vue";
 
+import type { AppUser } from "../lib/types";
+
 const authClient = createAuthClient();
 
 type SignInForm = {
@@ -15,7 +17,7 @@ export const useAuthStore = defineStore("useAuthStore", () => {
     session.value = data;
   }
 
-  const user = computed(() => session.value?.data?.user);
+  const user = computed<AppUser | null>(() => session.value?.data?.user);
   const loading = computed(() => session.value?.isPending);
 
   async function signIn(form: SignInForm) {

@@ -8,6 +8,7 @@ import { sendUserVerificationEmail } from "../server/utils/send-email-verificati
 import db from "./db/index";
 import * as schema from "./db/schema";
 import env from "./env";
+import { inferAdditionalFields } from "better-auth/client/plugins";
 
 export type UserWithId = Omit<User, "id"> & {
   id: number;
@@ -55,5 +56,13 @@ export const auth = betterAuth({
 
   plugins: [
     admin({ defaultRole: "regular", adminRoles: ["admin"] }),
+   inferAdditionalFields({
+      user: {
+        phone: {
+          type: 'string',
+          required: false
+        }
+      }
+    })
   ],
 });
