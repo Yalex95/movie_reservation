@@ -34,6 +34,20 @@ export const useAuthStore = defineStore("useAuthStore", () => {
     await authClient.signOut();
     navigateTo("/");
   }
+  function updateUser(payload: Partial<AppUser>) {
+    if (!session.value?.data?.user)
+      return;
+    session.value = {
+      ...session.value,
+      data: {
+        ...session.value.data,
+        user: {
+          ...session.value.data.user,
+          ...payload,
+        },
+      },
+    };
+  }
   return {
     // state
     session,
@@ -44,5 +58,6 @@ export const useAuthStore = defineStore("useAuthStore", () => {
     signIn,
     signOut,
     init,
+    updateUser,
   };
 });

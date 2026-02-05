@@ -9,29 +9,39 @@ const props = defineProps<{
   onSubmit: (profile: T) => Promise<any>;
   submitLabel: string;
 }>();
-
 const submitted = ref(false);
-const submitError = ref("");
 const loading = ref(false);
 
+const { setToast, toast } = useToast();
 const { handleSubmit, errors, setErrors, meta } = useForm({
   validationSchema: toTypedSchema(props.schema),
   initialValues: props.initialValues,
 });
 const onSubmit = handleSubmit(async (values: T) => {
-  console.log("submit");
+  loading.value = true;
+
   try {
-    submitError.value = "";
     await props.onSubmit(values);
     submitted.value = true;
+
+    setToast({
+      message: "information updated successfully",
+      type: "success",
+      show: true,
+    });
   }
   catch (e) {
     const error = e as FetchError;
     if (error.data?.data) {
       setErrors(error.data?.data);
     }
-    submitError.value = getFetchErrorMessage(error);
+    setToast({
+      message: getFetchErrorMessage(error),
+      type: "error",
+      show: true,
+    });
   }
+
   loading.value = false;
 });
 
@@ -47,6 +57,11 @@ onBeforeRouteLeave(() => {
 </script>
 
 <template>
+  <AppToast
+    :show="toast.show"
+    :label="toast.message"
+    :alert-type="toast.type"
+  />
   <form
     class="grid grid-cols-2 gap-6"
     @submit.prevent="onSubmit"
@@ -55,7 +70,7 @@ onBeforeRouteLeave(() => {
     <div class="col-span-2 flex justify-end gap-3">
       <button
         class="btn btn-info text-white w-fit "
-        :disabled="loading"
+        :disabled="loading "
       >
         {{ submitLabel }}
         <span v-if="loading" class="loading loading-spinner loading-xs" />

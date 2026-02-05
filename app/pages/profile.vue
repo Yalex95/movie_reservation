@@ -2,28 +2,37 @@
 import type { UpdatePassword, UpdateProfile } from "~~/lib/db/schema";
 
 import { authClient } from "~~/lib/auth-client";
+import { email } from "zod";
 
 definePageMeta({
   layout: "authenticated",
 });
 const authStore = useAuthStore();
-
+const initialValues = computed(() => ({
+  email: authStore.user?.email ?? "",
+  name: authStore.user?.name ?? "",
+  phone: authStore.user?.phone ?? "",
+}));
 async function onUpdateUser(values: UpdateProfile) {
-  const result = await authClient.updateUser({
-    image: values.image,
-    name: values.name,
-    phone: values.phone,
-
-  });
+  const props = getModifiedProps(values, initialValues.value);
+  if (Object.keys(props).length === 0) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Nothing to change",
+    });
+  };
+  const result = await authClient.updateUser(props);
   if (result?.error) {
     throw createError({
       statusCode: 400,
-      statusMessage: result.error.message ,
+      statusMessage: result.error.message,
       data: {
         currentPassword: result.error.message,
       },
     });
   }
+
+  authStore.updateUser(props);
 
   return result;
 }
@@ -91,7 +100,7 @@ async function onUpdatePassword(values: UpdatePassword) {
             Update your personal information
           </p>
           <UserForm
-            :initial-values="authStore.user"
+            :initial-values="initialValues"
             :on-submit="onUpdateUser"
             submit-label="Update profile"
           />
