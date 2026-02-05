@@ -7,7 +7,10 @@ export type navItems = {
   href?: string;// ? is optional
   to?: RouteLocationRaw;
 };
-
+export type Password = {
+  password: string;
+  confirmNewPassword: string;
+};
 export type AppUser = {
   id: string;
   email: string;
@@ -22,3 +25,10 @@ export type AppUser = {
   role?: string | null;
   is_active?: boolean;
 };
+export type Profile ={
+  name?: string,
+  phone?: string,
+  email?: string,
+  image?: string
+  //dob: string
+}

@@ -20,6 +20,7 @@ export const user = sqliteTable("user", {
     .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
     .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
+  // dob: integer("dob", { mode: "timestamp_ms" }),
   role: text("role"),
   banned: integer("banned", { mode: "boolean" }).default(false),
   banReason: text("ban_reason"),
@@ -27,7 +28,7 @@ export const user = sqliteTable("user", {
   phone: text().unique(),
   is_active: integer({ mode: "boolean" }).default(false).notNull(),
 });
-//add DOB
+// add DOB
 export const session = sqliteTable(
   "session",
   {
@@ -120,7 +121,7 @@ export const accountRelations = relations(account, ({ one }) => ({
 }));
 
 // validation scheme to insert an user
-export const insertUserSchema = createInsertSchema(user, {
+export const InsertUser = createInsertSchema(user, {
   name: field =>
     field.min(1, "Name is required").max(100, "Name cannot have more than 100 char"),
 
@@ -148,12 +149,12 @@ export const insertAccoutSchema = z.object({
 });
 
 // merge accout and user
-export const registerSchema = insertUserSchema.extend(insertAccoutSchema.shape).extend({ confirmPassword: z.string() }).refine(data => data.password === data.confirmPassword, {
+export const RegisterUser = InsertUser.extend(insertAccoutSchema.shape).extend({ confirmPassword: z.string() }).refine(data => data.password === data.confirmPassword, {
   message: "Las contraseñas no coinciden",
   path: ["confirmPassword"],
 });
 // Esquema para login
-export const loginSchema = z.object({
+export const LoginUser = z.object({
   email: z.string().min(1, "El email es requerido").pipe(
     z.email({
       message: "Invalid email",
@@ -162,19 +163,29 @@ export const loginSchema = z.object({
   password: z.string().min(1, "La contraseña es requerida"),
 });
 // Esquema para actualizar perfil
-export const updateProfileSchema = z.object({
-  name: z.string().min(1, "Name is required").max(100, "Name cannot have more than 100 char"),
-  email: z.string().min(1, "El email es requerido").pipe(
+export const UpdateProfile = z.object({
+  name: z.string().max(100, "Name cannot have more than 100 char").optional(),
+  email: z.string().pipe(
     z.email({
       message: "Invalid email",
     }),
-  ),
+  ).optional(),
   phone: z.string().max(20, "Phone number cannot have more than 20 char").optional(),
   image: z.string().max(255, "Image URL cannot have more than 255 char").optional(),
 
 });
+// Esquema para actualizar contrasena
+export const UpdatePassword = z.object({
+  currentPassword: z.string().min(1, "La contraseña actual es requerida"),
+  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La nueva contraseña debe contener al menos una mayúscula, una minúscula y un número"),
+  confirmNewPassword: z.string(),
+}).refine(data => data.password === data.confirmNewPassword, {
+  message: "Las nuevas contraseñas no coinciden",
+  path: ["confirmNewPassword"],
+});
 // Tipos
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type RegisterData = z.infer<typeof registerSchema>;
-export type LoginData = z.infer<typeof loginSchema>;
-export type UpdateProfileData = z.infer<typeof updateProfileSchema>;
+export type InsertUser = z.infer<typeof InsertUser>;
+export type RegisterData = z.infer<typeof RegisterUser>;
+export type LoginData = z.infer<typeof LoginUser>;
+export type UpdateProfile = z.infer<typeof UpdateProfile>;
+export type UpdatePassword = z.infer<typeof UpdatePassword>;

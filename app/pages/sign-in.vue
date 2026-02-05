@@ -2,13 +2,13 @@
 import type { FetchError } from "ofetch";
 
 import { toTypedSchema } from "@vee-validate/zod";
-import { loginSchema } from "~~/lib/db/schema";
+import { LoginUser } from "~~/lib/db/schema";
 
 const auth = useAuthStore();
 const loading = ref(false);
 
 const { handleSubmit, errors, setErrors } = useForm({
-  validationSchema: toTypedSchema(loginSchema),
+  validationSchema: toTypedSchema(LoginUser),
   initialValues: {
     email: "yerisaguilarg@gmail.com",
     password: "yerisDev1234#",
@@ -22,10 +22,10 @@ const onSubmit = handleSubmit(async (values) => {
       password: values.password,
     };
     // const { error } = await authClient.signIn.email(form);
- 
+
     const result = await auth.signIn(form);
-    if (result.error) {
-      throw result.error;
+    if (result?.error) {
+      throw result?.error;
     }
   }
   catch (e) {
@@ -38,7 +38,6 @@ const onSubmit = handleSubmit(async (values) => {
   }
   loading.value = false;
 });
-
 </script>
 
 <template>

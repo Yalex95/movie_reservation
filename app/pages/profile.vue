@@ -1,26 +1,41 @@
 <script setup lang="ts">
-import { toTypedSchema } from "@vee-validate/zod";
-import { updateProfileSchema } from "~~/lib/db/schema";
+import type { UpdatePassword, UpdateProfile } from "~~/lib/db/schema";
+
+import { authClient } from "~~/lib/auth-client";
 
 definePageMeta({
   layout: "authenticated",
 });
 const authStore = useAuthStore();
-const { handleSubmit, errors } = useForm({
-  validationSchema: toTypedSchema(updateProfileSchema),
-  initialValues: {
-    name: authStore.user?.name || "",
-    email: authStore.user?.email || "",
-    phone: authStore.user?.phone || "",
-    // dob: authStore.user?.dob || "",
-  },
-});
 
-const loading = ref(false);
+async function onUpdateUser(values: UpdateProfile) {
+  const result = await authClient.updateUser({
+    image: values.image,
+    name: values.name,
+    phone: values.phone,
 
-const onSubmit = handleSubmit(async (values) => {
-  console.log(values);
-});
+  });
+}
+async function onUpdatePassword(values: UpdatePassword) {
+
+
+  const result = await authClient.changePassword({
+    newPassword: values.password, // required yerisDev12#
+    currentPassword: values.currentPassword, // required
+    revokeOtherSessions: true,
+  });
+  if (result?.error) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: result.error.message || "Current password is incorrect",
+      data: {
+        currentPassword: result.error.message,
+      },
+    });
+  }
+
+  return result;
+}
 </script>
 
 <template>
@@ -41,7 +56,7 @@ const onSubmit = handleSubmit(async (values) => {
           </div>
           <div class="flex justify-center flex-col">
             <h2 class="text-2xl font-semibold mt-4">
-              Peter Parker
+              {{ authStore.user?.name }}
             </h2>
             <p class="text-gray-500">
               Update your photo for your profile
@@ -57,60 +72,36 @@ const onSubmit = handleSubmit(async (values) => {
           </button>
         </div>
       </div>
-      <div id="personal-info" class="container  p-8 bg-base-100 rounded-lg border border-gray-700">
-        <h2 class="text-2xl font-semibold mt-4">
-          Personal Information
-        </h2>
+      <!-- profile and password -->
+      <div class="grid grid-cols-2 gap-5">
+        <div id="personal-info" class="container  p-8 bg-base-100 rounded-lg border border-gray-700">
+          <h2 class="text-2xl font-semibold mt-4">
+            Personal Information
+          </h2>
+          <p class="text-gray-500">
+            Update your personal information
+          </p>
+          <UserForm
+            :initial-values="authStore.user"
+            :on-submit="onUpdateUser"
+            submit-label="Update profile"
+          />
+        </div>
+        <div id="security-info" class="container  p-8 bg-base-100 rounded-lg border border-gray-700">
+          <h2 class="text-2xl font-semibold mt-4">
+            Security & Password
+          </h2>
+          <p class="text-gray-500">
+            Protect your account with a strong password
+          </p>
 
-        <form>
-          <!-- form here -->
-        </form>
+          <NewPasswordForm
+            :on-submit="onUpdatePassword"
+            submit-label="Update Password"
+          />
+        </div>
       </div>
-      <div id="security-info" class="container  p-8 bg-base-100 rounded-lg border border-gray-700">
-        <h2 class="text-2xl font-semibold mt-4">
-          Security & Password
-        </h2>
-        <p class="text-gray-500">
-          Protect your account with a strong password
-        </p>
-        <form
-          class="grid grid-cols-2 gap-6"
-          @submit.prevent="onSubmit"
-        >
-          <AppFormField
-            :error="errors.name"
-            label="Full Name"
-            name="name"
-            :disabled="loading"
-          />
-          <AppFormField
-            :error="errors.email"
-            label="Email Address"
-            name="email"
-            :disabled="loading"
-          />
-          <AppFormField
-            :error="errors.phone"
-            label="Phone Number"
-            name="phone"
-            :disabled="loading"
-          />
-          <AppFormField
-            :error="errors.dob"
-            label="Date of Birth"
-            name="dob"
-            :disabled="loading"
-          />
-
-          <button
-            class="btn btn-info text-white w-fit"
-            :disabled="loading"
-          >
-            Save Profile Changes
-            <span v-if="loading" class="loading loading-spinner loading-xs" />
-          </button>
-        </form>
-      </div>
+      <!-- TODO: add delete user btn -->
     </div>
   </div>
 </template>

@@ -2,13 +2,13 @@ import type { User } from "better-auth";
 
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { inferAdditionalFields } from "better-auth/client/plugins";
 import { admin } from "better-auth/plugins";
 
 import { sendUserVerificationEmail } from "../server/utils/send-email-verification";
 import db from "./db/index";
 import * as schema from "./db/schema";
 import env from "./env";
-import { inferAdditionalFields } from "better-auth/client/plugins";
 
 export type UserWithId = Omit<User, "id"> & {
   id: number;
@@ -40,7 +40,7 @@ export const auth = betterAuth({
       phone: {
         type: "string",
         required: false,
-        input: false,
+        input: true,
         database: true,
       },
 
@@ -56,13 +56,13 @@ export const auth = betterAuth({
 
   plugins: [
     admin({ defaultRole: "regular", adminRoles: ["admin"] }),
-   inferAdditionalFields({
+    inferAdditionalFields({
       user: {
         phone: {
-          type: 'string',
-          required: false
-        }
-      }
-    })
+          type: "string",
+          required: false,
+        },
+      },
+    }),
   ],
 });

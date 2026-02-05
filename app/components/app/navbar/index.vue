@@ -10,7 +10,7 @@ const route = useRoute();
 const auth = useAuthStore();
 effect(() => {
   if (session.value) {
-    if (session.value.data.user.role === "admin") {
+    if (session.value?.data?.user?.role === "admin") {
       navbarStore.navbarItems = [{
         id: "link-dashboard",
         label: "Dashboard",
