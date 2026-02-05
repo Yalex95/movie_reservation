@@ -19,6 +19,7 @@ const { handleSubmit, errors, setErrors, meta } = useForm({
   initialValues: props.initialValues,
 });
 const onSubmit = handleSubmit(async (values: T) => {
+  console.log("submit");
   try {
     submitError.value = "";
     await props.onSubmit(values);
@@ -59,12 +60,12 @@ onBeforeRouteLeave(() => {
         {{ submitLabel }}
         <span v-if="loading" class="loading loading-spinner loading-xs" />
       </button>
-      <button
+      <!-- <button
         class="btn btn-outline btn-error text-white w-fit "
         disabled
       >
         Change Email
-      </button>
+      </button> -->
     </div>
   </form>
 </template>

@@ -56,13 +56,13 @@ export const auth = betterAuth({
 
   plugins: [
     admin({ defaultRole: "regular", adminRoles: ["admin"] }),
-    inferAdditionalFields({
-      user: {
-        phone: {
-          type: "string",
-          required: false,
-        },
-      },
-    }),
+    // inferAdditionalFields({
+    //   user: {
+    //     phone: {
+    //       type: "string",
+    //       required: false,
+    //     },
+    //   },
+    // }),
   ],
 });

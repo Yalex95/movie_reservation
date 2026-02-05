@@ -15,10 +15,19 @@ async function onUpdateUser(values: UpdateProfile) {
     phone: values.phone,
 
   });
+  if (result?.error) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: result.error.message ,
+      data: {
+        currentPassword: result.error.message,
+      },
+    });
+  }
+
+  return result;
 }
 async function onUpdatePassword(values: UpdatePassword) {
-
-
   const result = await authClient.changePassword({
     newPassword: values.password, // required yerisDev12#
     currentPassword: values.currentPassword, // required
