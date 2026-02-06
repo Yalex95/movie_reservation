@@ -1,5 +1,17 @@
 <script lang="ts" setup>
-const props = defineProps<{ error?: string; label: string; type?: "text" | "textarea" | "number" | "password"; name: string; disabled?: boolean }>();
+const props = withDefaults(
+  defineProps<{
+    error?: string;
+    label: string;
+    type?: "text" | "textarea" | "number" | "password";
+    name: string;
+    disabled?: boolean;
+    placeholder?: string;
+  }>(),
+  {
+    placeholder: "Type here",
+  },
+);
 </script>
 
 <template>
@@ -12,7 +24,7 @@ const props = defineProps<{ error?: string; label: string; type?: "text" | "text
       :as=" type === 'number' || 'password' ? 'input' : type || 'input' "
       :name="props.name"
       :type="type || 'text'"
-      placeholder="Type here"
+      :placeholder
       class=" w-full"
       :class="{
         'input-error': props.error,
@@ -21,8 +33,10 @@ const props = defineProps<{ error?: string; label: string; type?: "text" | "text
       }"
       :disabled="props.disabled"
     />
-    <p v-if="props.error" class="label text-error">
-      {{ props.error }}
-    </p>
+    <p
+      v-if="props.error"
+      class="label text-error"
+      v-html="props.error"
+    />
   </fieldset>
 </template>

@@ -17,9 +17,10 @@ defineProps<{
     :submit-label="submitLabel"
   >
     <AppFormField
-      label="currentPassword"
+      label="Current Password"
       name="currentPassword"
-      type="password"
+      type="text"
+      placeholder="Type current password"
       :disabled="loading"
       :error="errors.currentPassword"
     />
@@ -29,13 +30,15 @@ defineProps<{
       type="password"
       :disabled="loading"
       :error="errors.password"
+      placeholder="Type password"
     />
     <AppFormField
       :error="errors.confirmNewPassword"
       label="Confirm Password"
       name="confirmNewPassword"
-      type="password"
+      type="text"
       :disabled="loading"
+      placeholder="Confirm password"
     />
   </PasswordBaseForm>
 </template>

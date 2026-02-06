@@ -1,6 +1,6 @@
-import { createAuthClient } from "better-auth/vue";
+import type { AppUser } from "~~/lib/types";
 
-import type { AppUser } from "../lib/types";
+import { createAuthClient } from "better-auth/vue";
 
 const authClient = createAuthClient();
 

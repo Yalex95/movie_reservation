@@ -6,13 +6,13 @@ import type { ZodType } from "zod";
 import { toTypedSchema } from "@vee-validate/zod";
 
 const props = defineProps<{
-  // initialValues: T;// T
   schema: ZodType<T>;
   onSubmit: (password: T) => Promise<any>;
   submitLabel: string;
 }>();
+const { setToast, toast } = useToast();
+
 const submitted = ref(false);
-const submitError = ref("");
 const loading = ref(false);
 
 const { handleSubmit, errors, setErrors, meta } = useForm({
@@ -20,16 +20,25 @@ const { handleSubmit, errors, setErrors, meta } = useForm({
 });
 const onSubmit = handleSubmit(async (values: T) => {
   try {
-    submitError.value = "";
+    loading.value = true;
     await props.onSubmit(values);
     submitted.value = true;
+    setToast({
+      message: "Password updated succesfully",
+      type: "success",
+      show: true,
+    });
   }
   catch (e) {
     const error = e as FetchError;
     if (error.data?.data) {
       setErrors(error.data?.data);
     }
-    submitError.value = getFetchErrorMessage(error);
+    setToast({
+      message: getFetchErrorMessage(error),
+      type: "error",
+      show: true,
+    });
   }
   loading.value = false;
 },
@@ -44,20 +53,20 @@ onBeforeRouteLeave(() => {
   }
   return true;
 });
+
 </script>
 
 <template>
-  <div
-    v-if="submitError"
-    role="alert"
-    class="alert alert-error mt-3"
-  >
-    <span>{{ submitError }}</span>
-  </div>
+  <AppToast
+    :show="toast.show"
+    :label="toast.message"
+    :alert-type="toast.type"
+  />
   <form class="grid grid-cols-2 gap-6" @submit.prevent="onSubmit">
     <slot :errors="errors" :loading="loading" />
-
+    
     <button
+      type="submit"
       class="btn btn-info text-white w-fit col-span-2"
       :disabled="loading"
     >

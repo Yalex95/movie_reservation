@@ -2,7 +2,6 @@
 import type { UpdatePassword, UpdateProfile } from "~~/lib/db/schema";
 
 import { authClient } from "~~/lib/auth-client";
-import { email } from "zod";
 
 definePageMeta({
   layout: "authenticated",
@@ -67,11 +66,11 @@ async function onUpdatePassword(values: UpdatePassword) {
       </div>
       <div class="container flex justify-between p-8 bg-base-100 rounded-lg border border-gray-700">
         <div class="flex gap-10">
-          <div class="avatar">
-            <div class=" w-48 rounded-full ">
-              <img src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp">
-            </div>
-          </div>
+          <AppAvatar
+            :avatar="authStore?.user?.image"
+            :place-holder="authStore?.user?.name?.charAt(0)?.toUpperCase()"
+            :name="authStore?.user?.name"
+          />
           <div class="flex justify-center flex-col">
             <h2 class="text-2xl font-semibold mt-4">
               {{ authStore.user?.name }}

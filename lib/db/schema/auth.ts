@@ -145,7 +145,7 @@ export const InsertUser = createInsertSchema(user, {
 
 // schema for account
 export const insertAccoutSchema = z.object({
-  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La contraseña debe contener al menos una mayúscula, una minúscula y un número"),
+  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La contraseña debe contener al menos una mayúscula,<br> una minúscula y un número"),
 });
 
 // merge accout and user
@@ -170,14 +170,14 @@ export const UpdateProfile = z.object({
       message: "Invalid email",
     }),
   ).optional(),
-  phone: z.string().max(20, "Phone number cannot have more than 20 char").optional(),
+  phone: z.string().max(20, "Phone number cannot have more than 10 numbers").regex(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/,"password should match 123-456-7890").optional(),
   image: z.string().max(255, "Image URL cannot have more than 255 char").optional(),
 
 });
 // Esquema para actualizar contrasena
 export const UpdatePassword = z.object({
   currentPassword: z.string().min(1, "La contraseña actual es requerida"),
-  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La nueva contraseña debe contener al menos una mayúscula, una minúscula y un número"),
+  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La nueva contraseña debe contener al menos una mayúscula,<br> una minúscula y un número"),
   confirmNewPassword: z.string(),
 }).refine(data => data.password === data.confirmNewPassword, {
   message: "Las nuevas contraseñas no coinciden",

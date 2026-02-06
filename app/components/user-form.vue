@@ -27,17 +27,20 @@ defineProps<{
       label="Full Name"
       name="name"
       :disabled="loading"
+      placeholder="Type full name"
     />
     <AppFormField
       :error="errors.email"
       label="Email Address"
       name="email"
+      placeholder="example@gmail.com"
       :disabled="true"
     />
     <AppFormField
       :error="errors.phone"
       label="Phone Number"
       name="phone"
+      placeholder="123-456-7890"
       :disabled="loading"
     />
   </UserBaseForm>
