@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { index, int, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema } from "drizzle-zod";
 import z from "zod";
 
@@ -170,7 +170,7 @@ export const UpdateProfile = z.object({
       message: "Invalid email",
     }),
   ).optional(),
-  phone: z.string().max(20, "Phone number cannot have more than 10 numbers").regex(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/,"password should match 123-456-7890").optional(),
+  phone: z.string().max(20, "Phone number cannot have more than 10 numbers").regex(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/, "password should match 123-456-7890").optional(),
   image: z.string().max(255, "Image URL cannot have more than 255 char").optional(),
 
 });

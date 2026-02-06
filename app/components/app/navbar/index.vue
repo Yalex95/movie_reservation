@@ -1,12 +1,6 @@
 <script lang="ts" setup>
-import { authClient } from "~~/lib/auth-client";
-
-// const session = ref();
-
 const authStore = useAuthStore();
-// onMounted(async () => {
-//   session.value = await authClient.getSession();
-// });
+
 const navbarStore = useNavbarStore();
 const route = useRoute();
 const auth = useAuthStore();

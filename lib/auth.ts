@@ -2,7 +2,6 @@ import type { User } from "better-auth";
 
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { inferAdditionalFields } from "better-auth/client/plugins";
 import { admin } from "better-auth/plugins";
 
 import { sendUserVerificationEmail } from "../server/utils/send-email-verification";
@@ -53,16 +52,8 @@ export const auth = betterAuth({
       },
     },
   },
-
   plugins: [
     admin({ defaultRole: "regular", adminRoles: ["admin"] }),
-    // inferAdditionalFields({
-    //   user: {
-    //     phone: {
-    //       type: "string",
-    //       required: false,
-    //     },
-    //   },
-    // }),
+
   ],
 });

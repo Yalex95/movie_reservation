@@ -2,7 +2,7 @@
 import type { UpdatePassword, UpdateProfile } from "~~/lib/db/schema";
 
 import { authClient } from "~~/lib/auth-client";
-
+//TODO: update photo,remove photo, delete user btn
 definePageMeta({
   layout: "authenticated",
 });
@@ -118,7 +118,6 @@ async function onUpdatePassword(values: UpdatePassword) {
           />
         </div>
       </div>
-      <!-- TODO: add delete user btn -->
     </div>
   </div>
 </template>
