@@ -11,6 +11,10 @@ effect(() => {
         id: "link-dashboard",
         label: "Dashboard",
         to: "/dashboard",
+      }, {
+        id: "link-movies",
+        label: "Movies",
+        to: "/",
       }];
     }
     else { // regular user
@@ -62,7 +66,10 @@ effect(() => {
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
         <li v-for="item in navbarStore.navbarItems" :key="item.id">
-          <NuxtLink :to="item.to">
+          <NuxtLink
+            :to="item.to"
+            :class="[{ 'bg-base-300': route.path === item.to }]"
+          >
             {{ item.label }}
           </NuxtLink>
         </li>

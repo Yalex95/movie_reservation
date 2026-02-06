@@ -35,8 +35,8 @@ effect(() => {
       icon: "ic:baseline-meeting-room",
     }, {
       id: "link-users",
-      label: "Users",
-      href: "/dashboard/users",
+      label: "Staff",
+      href: "/dashboard/staff",
       icon: "material-symbols:groups-2",
     }];
   }else if(route.path.startsWith('/profile')){

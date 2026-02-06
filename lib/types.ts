@@ -25,10 +25,13 @@ export type AppUser = {
   role?: string | null;
   is_active?: boolean;
 };
-export type Profile ={
-  name?: string,
-  phone?: string,
-  email?: string,
-  image?: string
-  //dob: string
-}
+export type Profile = {
+  name?: string;
+  phone?: string;
+  email?: string;
+  image?: string;
+  // dob: string
+};
+
+export const ROLES = ["regular", "admin"] as const;
+export type Role = (typeof ROLES)[number];
