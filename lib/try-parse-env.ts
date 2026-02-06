@@ -9,7 +9,6 @@ export default function tryParseEnv<T extends ZodRawShape>(
 ) {
   try {
     EnvSchema.parse(buildEnv);
-    console.log("✅ Environment variables parsed successfully!");
   }
   catch (error) {
     if (error instanceof ZodError) {

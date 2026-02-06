@@ -29,8 +29,14 @@ const onSubmit = handleSubmit(async (values) => {
       name: values.name,
       confirmPassword: values.confirmPassword,
     };
-    const { data, error } = await authClient.signUp.email(form);
-    console.warn(data, error);
+    const { error } = await authClient.signUp.email(form);
+    if (error) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: error.message,
+
+      });
+    }
   }
   catch (e) {
     const error = e as FetchError;

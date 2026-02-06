@@ -1,8 +1,7 @@
 
 
 export default defineNuxtRouteMiddleware((to, from) => {
-  const nuxtApp = useNuxtApp();
-  const userFromServer = nuxtApp.ssrContext?.event?.context?.user;
-  console.log("Middleware auth.global - user from server:", userFromServer);
+  // const nuxtApp = useNuxtApp();
+  // const userFromServer = nuxtApp.ssrContext?.event?.context?.user;
   
 });
