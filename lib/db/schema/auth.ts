@@ -1,0 +1,191 @@
+import { relations, sql } from "drizzle-orm";
+import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { createInsertSchema } from "drizzle-zod";
+import z from "zod";
+
+import { reservations } from "./reservations";
+
+export const user = sqliteTable("user", {
+  id: text().primaryKey(),
+  name: text().notNull(),
+  email: text().notNull().unique(),
+  emailVerified: integer("email_verified", { mode: "boolean" })
+    .default(false)
+    .notNull(),
+  image: text(),
+  createdAt: integer("created_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .$onUpdate(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  // dob: integer("dob", { mode: "timestamp_ms" }),
+  role: text("role"),
+  banned: integer("banned", { mode: "boolean" }).default(false),
+  banReason: text("ban_reason"),
+  banExpires: integer("ban_expires", { mode: "timestamp_ms" }),
+  phone: text().unique(),
+  is_active: integer({ mode: "boolean" }).default(false).notNull(),
+});
+// add DOB
+export const session = sqliteTable(
+  "session",
+  {
+    id: text("id").primaryKey(),
+    expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
+    token: text("token").notNull().unique(),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    ipAddress: text("ip_address"),
+    userAgent: text("user_agent"),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    impersonatedBy: text("impersonated_by"),
+  },
+  table => [index("session_userId_idx").on(table.userId)],
+);
+
+export const account = sqliteTable(
+  "account",
+  {
+    id: text("id").primaryKey(),
+    accountId: text("account_id").notNull(),
+    providerId: text("provider_id").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    accessToken: text("access_token"),
+    refreshToken: text("refresh_token"),
+    idToken: text("id_token"),
+    accessTokenExpiresAt: integer("access_token_expires_at", {
+      mode: "timestamp_ms",
+    }),
+    refreshTokenExpiresAt: integer("refresh_token_expires_at", {
+      mode: "timestamp_ms",
+    }),
+    scope: text("scope"),
+    password: text("password"),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  table => [index("account_userId_idx").on(table.userId)],
+);
+
+export const verification = sqliteTable(
+  "verification",
+  {
+    id: text("id").primaryKey(),
+    identifier: text("identifier").notNull(),
+    value: text("value").notNull(),
+    expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
+    createdAt: integer("created_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+      .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+      .$onUpdate(() => /* @__PURE__ */ new Date())
+      .notNull(),
+  },
+  table => [index("verification_identifier_idx").on(table.identifier)],
+);
+
+export const userRelations = relations(user, ({ many }) => ({
+  sessions: many(session),
+  accounts: many(account),
+  reservations: many(reservations),
+
+}));
+
+export const sessionRelations = relations(session, ({ one }) => ({
+  user: one(user, {
+    fields: [session.userId],
+    references: [user.id],
+  }),
+}));
+
+export const accountRelations = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id],
+  }),
+}));
+
+// validation scheme to insert an user
+export const InsertUser = createInsertSchema(user, {
+  name: field =>
+    field.min(1, "Name is required").max(100, "Name cannot have more than 100 char"),
+
+  email: field =>
+    field
+      .min(1, "Email is required")
+      .max(255, "Email cannot have more than 255 char")
+      .pipe(
+        z.email({
+          message: "Invalid email",
+        }),
+      ),
+}).omit({
+  id: true,
+  emailVerified: true,
+  image: true,
+  is_active: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// schema for account
+export const insertAccoutSchema = z.object({
+  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La contraseña debe contener al menos una mayúscula,<br> una minúscula y un número"),
+});
+
+// merge accout and user
+export const RegisterUser = InsertUser.extend(insertAccoutSchema.shape).extend({ confirmPassword: z.string() }).refine(data => data.password === data.confirmPassword, {
+  message: "Las contraseñas no coinciden",
+  path: ["confirmPassword"],
+});
+// Esquema para login
+export const LoginUser = z.object({
+  email: z.string().min(1, "El email es requerido").pipe(
+    z.email({
+      message: "Invalid email",
+    }),
+  ),
+  password: z.string().min(1, "La contraseña es requerida"),
+});
+// Esquema para actualizar perfil
+export const UpdateProfile = z.object({
+  name: z.string().max(100, "Name cannot have more than 100 char").optional(),
+  email: z.string().pipe(
+    z.email({
+      message: "Invalid email",
+    }),
+  ).optional(),
+  phone: z.string().max(20, "Phone number cannot have more than 10 numbers").regex(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/, "password should match 123-456-7890").optional(),
+  image: z.string().max(255, "Image URL cannot have more than 255 char").optional(),
+
+});
+// Esquema para actualizar contrasena
+export const UpdatePassword = z.object({
+  currentPassword: z.string().min(1, "La contraseña actual es requerida"),
+  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La nueva contraseña debe contener al menos una mayúscula,<br> una minúscula y un número"),
+  confirmNewPassword: z.string(),
+}).refine(data => data.password === data.confirmNewPassword, {
+  message: "Las nuevas contraseñas no coinciden",
+  path: ["confirmNewPassword"],
+});
+// Tipos
+export type InsertUser = z.infer<typeof InsertUser>;
+export type RegisterData = z.infer<typeof RegisterUser>;
+export type LoginData = z.infer<typeof LoginUser>;
+export type UpdateProfile = z.infer<typeof UpdateProfile>;
+export type UpdatePassword = z.infer<typeof UpdatePassword>;

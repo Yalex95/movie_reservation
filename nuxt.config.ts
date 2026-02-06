@@ -1,10 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import tailwindcss from "@tailwindcss/vite";
 
-import "./app/lib/env";
+import "./lib/env";
 
 export default defineNuxtConfig({
-  
+
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
@@ -13,10 +13,19 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
-  modules: ["@nuxt/eslint", "@nuxt/icon"],
+  modules: [
+    "@nuxt/eslint",
+    "@nuxt/icon",
+    "@vee-validate/nuxt",
+    "@pinia/nuxt",
+    "@nuxtjs/color-mode",
+  ],
   eslint: {
     config: {
       standalone: false,
     },
+  },
+  colorMode: {
+    dataValue: "theme",
   },
 });
