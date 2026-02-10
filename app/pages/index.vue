@@ -68,7 +68,7 @@ function toggleSidebar() {
           :show-label="isSidebarOpen"
           label="Login"
           icon="tabler:login"
-          href="/sign-in"
+          href="/auth/sign-in"
         />
         <SidebarButton
           v-else

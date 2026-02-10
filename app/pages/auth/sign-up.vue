@@ -61,7 +61,7 @@ const onSubmit = handleSubmit(async (values) => {
             <p>Create your account to manage bookings, save your favorite movies and earn exlisive rewards.</p>
           </div>
           <NuxtLink
-            to="/sign-in"
+            to="/auth/sign-in"
             class="btn md:flex hidden"
           >
             <Icon name="heroicons:arrow-left" />

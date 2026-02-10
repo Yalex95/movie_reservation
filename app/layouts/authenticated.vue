@@ -21,22 +21,22 @@ effect(() => {
     }, {
       id: "link-Movies",
       label: "Movies",
-      href: "/dashboard/movies",
+      href: "/movies",
       icon: "bx:bxs-movie-play",
     }, {
       id: "link-showtimes",
       label: "Showtimes",
-      href: "/dashboard/showtimes",
+      href: "/showtimes",
       icon: "ic:round-access-time-filled",
     }, {
       id: "link-rooms",
       label: "Rooms",
-      href: "/dashboard/rooms",
+      href: "/rooms",
       icon: "ic:baseline-meeting-room",
     }, {
       id: "link-users",
       label: "Staff",
-      href: "/dashboard/staff",
+      href: "/staff",
       icon: "material-symbols:groups-2",
     }];
   }else if(route.path.startsWith('/profile')){
@@ -114,7 +114,7 @@ function toggleSidebar() {
               :show-label="isSidebarOpen"
               label="Login"
               icon="tabler:login"
-              href="/sign-in"
+              href="/auth/sign-in"
             />
             <SidebarButton
               v-else

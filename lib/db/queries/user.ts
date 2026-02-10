@@ -1,25 +1,76 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, like, or, sql } from "drizzle-orm";
 
 import db from "..";
 import { user } from "../schema";
 
 type userFilterParams = {
   banned?: boolean;// cambiar en como esta cinfigurado en better auth
-  name?: string;
-  role?: "regular" | "admin";// agregar mas roles
+  search?: string;
+  page?: number;
+  limit?: number;
 };
 export async function findUsers(params: userFilterParams) {
-  const filters = [];
-  if (params.banned) {
-    filters.push(eq(user.banned, params.banned));
+  const { search, banned, page = 1, limit = 10 } = params;
+  const offset = (page - 1) * limit;
+
+  const conditions = [];
+
+  if (typeof banned === "boolean") {
+    conditions.push(eq(user.banned, banned));
   }
-  if (params.name) {
-    filters.push(eq(user.name, params.name));
+
+  if (search) {
+    const q = `%${search.toLowerCase()}%`;
+
+    conditions.push(
+      or(
+        like(sql`lower(${user.email})`, q),
+        like(sql`lower(${user.name})`, q),
+        like(sql`lower(${user.role})`, q),
+      ),
+    );
   }
-  if (params.role) {
-    filters.push(eq(user.role, params.role));
-  }
-  return db.query.user.findMany({
-    where: filters.length ? and(...filters) : undefined,
+
+  const data = await db.query.user.findMany({
+    where: and(...conditions),
+    limit,
+    offset,
+    orderBy: (user, { desc }) => [desc(user.createdAt)],
   });
+  const countResult = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(user)
+    .where(and(...conditions));
+  const total = countResult[0]?.count ?? 0;
+  return {
+    data,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
+}
+
+export async function getUser(id: any) {
+  const data = await db.select({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    email_verified: user.emailVerified,
+    image: user.image,
+    role: user.role,
+    banned: user.banned,
+    phone:user.phone,
+    is_active: user.is_active,
+    last_login_at: sql<Date|null>``
+
+  })
+  
+  // const data = await db.query.user.findFirst({
+  //   where: eq(user.id, id),
+    
+  // });
+  // return data;
 }

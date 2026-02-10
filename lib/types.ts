@@ -35,3 +35,9 @@ export type Profile = {
 
 export const ROLES = ["regular", "admin"] as const;
 export type Role = (typeof ROLES)[number];
+
+export type ButtonItem = {
+  label: string;
+  value: string ;
+  active: boolean;
+};

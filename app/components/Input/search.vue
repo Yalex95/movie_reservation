@@ -1,9 +1,15 @@
 <script lang="ts" setup>
-const props = defineProps<{ placeHolder: string }>();
+const props = defineProps<{ 
+  placeholder: string; 
+  wrapperClass: string;
+   modelValue: string }>();
+defineEmits<{
+  "update:modelValue": [value: string];
+}>();
 </script>
 
 <template>
-  <label class="input">
+  <label class="input" :class="wrapperClass">
     <svg
       class="h-[1em] opacity-50"
       xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +32,9 @@ const props = defineProps<{ placeHolder: string }>();
     </svg>
     <input
       type="search"
-      :placeholder="placeHolder"
+      :placeholder
+      :value="props.modelValue"
+      @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     >
   </label>
 </template>

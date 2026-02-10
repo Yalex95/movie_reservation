@@ -80,7 +80,7 @@ effect(() => {
       <NuxtLink
         v-if="!authStore.user"
         class="btn "
-        :to="route.path.includes('sign-up') ? '/sign-in' : '/sign-up'"
+        :to="route.path.includes('sign-up') ? '/auth/sign-in' : '/auth/sign-up'"
       >
         {{ route.path.includes('sign-up') ? 'Login' : 'Sign up' }}
       </NuxtLink>
