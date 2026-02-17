@@ -1,7 +1,7 @@
 import { and, eq, like, or, sql } from "drizzle-orm";
 
 import db from "..";
-import { user } from "../schema";
+import { session, user } from "../schema";
 
 type userFilterParams = {
   banned?: boolean;// cambiar en como esta cinfigurado en better auth
@@ -53,7 +53,7 @@ export async function findUsers(params: userFilterParams) {
   };
 }
 
-export async function getUser(id: any) {
+export async function getUser(id: string) {
   const data = await db.select({
     id: user.id,
     name: user.name,
@@ -62,15 +62,10 @@ export async function getUser(id: any) {
     image: user.image,
     role: user.role,
     banned: user.banned,
-    phone:user.phone,
+    phone: user.phone,
     is_active: user.is_active,
-    last_login_at: sql<Date|null>``
+    last_login_at: sql<Date | null>`(select max(${session.createdAt}) from ${session} where ${session.userId}=${user.id})`,
 
-  })
-  
-  // const data = await db.query.user.findFirst({
-  //   where: eq(user.id, id),
-    
-  // });
-  // return data;
+  }).from(user).where(eq(user.id, id)).limit(1);
+  return data[0]??null;
 }

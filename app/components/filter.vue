@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import type { ButtonItem } from "~~/lib/types";
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   btnGroup: Array<ButtonItem>;
   searchPlaceholder?: string;
   buttonClass: string;
   activeValues?: string[];
-  modelValue: string;
+  modelValue: string | undefined;
 }>(), {
   searchPlaceholder: "Search",
 });
+//alternative, more succinct syntax
 const emit = defineEmits<{
   "btnClick": [value: string ];
   "update:modelValue": [value: string];

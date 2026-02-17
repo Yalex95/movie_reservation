@@ -67,7 +67,7 @@ onBeforeRouteLeave(() => {
     
     <button
       type="submit"
-      class="btn btn-info text-white w-fit col-span-2"
+      class="btn btn-info text-base-content w-fit col-span-2"
       :disabled="loading"
     >
       {{ submitLabel }}

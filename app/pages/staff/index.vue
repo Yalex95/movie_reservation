@@ -29,7 +29,7 @@ Object.entries(route.query).forEach(([key, value]) => {
   }
 });
 
-const { data: users, error, status } = await useFetch("/api/users", {
+const { data: users } = await useFetch("/api/users", {
   method: "GET",
   query,
 });
@@ -114,7 +114,7 @@ function handlePagination(page: number | undefined, direction: string) {
 
 <template>
   <div class="flex-1 flex min-h-0">
-    <div class="container mx-auto py-10 gap-10 flex-col flex flex-1 min-h-0 overflow-auto">
+    <div class="container mx-auto p-10 gap-10 flex-col flex flex-1 min-h-0 overflow-auto">
       <div>
         <h1 class="text-3xl font-bold mb-2">
           User Management
@@ -185,9 +185,8 @@ function handlePagination(page: number | undefined, direction: string) {
                 <button class="join-item btn">
                   {{ users?.pagination.page }}
                 </button>
-
                 <button
-                  :disabled="Number(users?.pagination.page) === users?.pagination.totalPages"
+                  :disabled="Number(users?.pagination.page) === users?.pagination.totalPages || users?.pagination.totalPages === 0"
                   class="join-item btn"
                   @click="handlePagination(users?.pagination.page, 'next')"
                 >
@@ -199,7 +198,7 @@ function handlePagination(page: number | undefined, direction: string) {
         </template>
       </AppTable>
       <AppModal id="bann">
-        <Icon name="material-symbols:group-remove" size="24"/>
+        <Icon name="material-symbols:group-remove" size="24" />
         <h3 class="text-lg font-bold">
           Temporarly bann this user?
         </h3>

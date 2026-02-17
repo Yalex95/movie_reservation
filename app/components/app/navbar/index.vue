@@ -100,7 +100,7 @@ effect(() => {
             class="btn btn-ghost btn-circle avatar"
             name-class="text-sm font-bold"
             :avatar="authStore?.user?.image"
-            :place-holder="authStore?.user?.name?.charAt(0)?.toUpperCase()"
+           
             :name="authStore?.user?.name"
           />
           <ul

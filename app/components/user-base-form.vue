@@ -71,7 +71,7 @@ onBeforeRouteLeave(() => {
     <slot :errors="errors" :loading="loading" />
     <div class="col-span-2 flex justify-end gap-3">
       <button
-        class="btn btn-info text-white w-fit "
+        class="btn btn-info text-base-content w-fit "
         :disabled="loading "
       >
         {{ submitLabel }}

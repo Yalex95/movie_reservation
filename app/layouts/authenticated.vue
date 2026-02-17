@@ -12,7 +12,7 @@ onMounted(async () => {
   session.value = await authClient.getSession();
 });
 effect(() => {
-  if (session.value?.data?.user?.role === "admin" && !route.path.startsWith('/profile')) { // validate user role
+  if (session.value?.data?.user?.role === "admin" && !route.path.startsWith("/profile")) { // validate user role
     sidebarStore.sidebarItems = [{
       id: "link-dashboard-overview",
       label: "Overview",
@@ -39,20 +39,19 @@ effect(() => {
       href: "/staff",
       icon: "material-symbols:groups-2",
     }];
-  }else if(route.path.startsWith('/profile')){
+  }
+  else if (route.path.startsWith("/profile")) {
     sidebarStore.sidebarItems = [{
       id: "link-personal-info",
       label: "Personal Info",
       href: "/profile",
       icon: "material-symbols:person-outline",
-    },
-    {
+    }, {
       id: "link-security",
       label: "Security",
       href: "#security",
       icon: "ic:outline-security",
-    },
-  ];
+    }];
   }
 });
 
@@ -105,7 +104,7 @@ function toggleSidebar() {
               :icon="item.icon"
               :href="item.href"
               :to="item.to"
-              :is-active="route.path === item.href"
+              :is-active="route.path.includes(item?.href || '')"
             />
 
             <div class="divider" />
