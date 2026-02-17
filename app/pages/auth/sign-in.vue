@@ -99,7 +99,7 @@ const onSubmit = handleSubmit(async (values) => {
       </form>
       <hr>
       <p class="text-xs text-center">
-        Don't have an account yet? <NuxtLink to="/sign-up" class="font-semibold underline underline-offset-2">
+        Don't have an account yet? <NuxtLink to="/auth/sign-up" class="font-semibold underline underline-offset-2">
           Create an account
         </NuxtLink>
       </p>
