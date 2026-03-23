@@ -3,6 +3,7 @@ import type { FetchError } from "ofetch";
 
 import { toTypedSchema } from "@vee-validate/zod";
 import { LoginUser } from "~~/lib/db/schema";
+import { Field } from "vee-validate";
 
 const auth = useAuthStore();
 const loading = ref(false);
@@ -11,7 +12,7 @@ const { handleSubmit, errors, setErrors } = useForm({
   validationSchema: toTypedSchema(LoginUser),
   initialValues: {
     email: "yerisaguilarg@gmail.com",
-    password: "yerisDev1234#",
+    password: "yerisDev123#",
   },
 });
 const onSubmit = handleSubmit(async (values) => {
@@ -24,11 +25,13 @@ const onSubmit = handleSubmit(async (values) => {
     // const { error } = await authClient.signIn.email(form);
 
     const result = await auth.signIn(form);
+    console.debug(result);
     if (result?.error) {
       throw result?.error;
     }
   }
   catch (e) {
+    console.debug(e);
     const error = e as FetchError;
     if (error.data?.data) {
       setErrors(error.data?.data);
@@ -61,14 +64,13 @@ const onSubmit = handleSubmit(async (values) => {
           name="email"
           :disabled="loading"
         />
-        <AppFormField
+       
+        <AppUiFormPassword
           :error="errors.password"
           label="Password"
           name="password"
-          type="password"
           :disabled="loading"
         />
-
         <div class="flex gap-4 justify-between items-center">
           <AppCheckBox
             checkbox-class="checkbox-info border-gray-100 checkbox-sm"
