@@ -8,7 +8,13 @@ const EnvSchema = z.object({
   TURSO_AUTH_TOKEN: z.string(),
   BETTER_AUTH_SECRET: z.string(),
   BETTER_AUTH_URL: z.string(),
-  RESEND_API_KEY:z.string()
+  RESEND_API_KEY: z.string(),
+
+  DB_HOST: z.string(),
+  DB_PORT: z.string(),
+  DB_PASSWORD: z.string(),
+  DB_NAME: z.string(),
+  DB_USER: z.string()
 });
 
 export type EnvSchema = z.infer<typeof EnvSchema>;

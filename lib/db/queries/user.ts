@@ -1,6 +1,6 @@
 import { and, eq, like, or, sql } from "drizzle-orm";
 
-import db from "..";
+import {db} from "..";
 import { session, user } from "../schema";
 
 type userFilterParams = {

@@ -1,15 +1,5 @@
 import { relations } from "drizzle-orm";
-import {
-  boolean,
-  index,
-  pgTable,
-  text,
-  timestamp,
-} from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import z from "zod";
-
-import { reservations } from "./reservations";
+import { boolean, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -29,7 +19,7 @@ export const user = pgTable("user", {
   phone: text("phone"),
   is_active: boolean("is_active"),
 });
-// add DOB
+
 export const session = pgTable(
   "session",
   {
@@ -93,8 +83,6 @@ export const verification = pgTable(
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
-  reservations: many(reservations),
-
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({
@@ -110,73 +98,3 @@ export const accountRelations = relations(account, ({ one }) => ({
     references: [user.id],
   }),
 }));
-
-// validation scheme to insert an user
-export const InsertUser = createInsertSchema(user, {
-  name: field =>
-    field.min(1, "Name is required").max(100, "Name cannot have more than 100 char"),
-
-  email: field =>
-    field
-      .min(1, "Email is required")
-      .max(255, "Email cannot have more than 255 char")
-      .pipe(
-        z.email({
-          message: "Invalid email",
-        }),
-      ),
-}).omit({
-  id: true,
-  emailVerified: true,
-  image: true,
-  is_active: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-// schema for account
-export const insertAccoutSchema = z.object({
-  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La contraseña debe contener al menos una mayúscula,<br> una minúscula y un número"),
-});
-
-// merge accout and user
-export const RegisterUser = InsertUser.extend(insertAccoutSchema.shape).extend({ confirmPassword: z.string() }).refine(data => data.password === data.confirmPassword, {
-  message: "Las contraseñas no coinciden",
-  path: ["confirmPassword"],
-});
-// Esquema para login
-export const LoginUser = z.object({
-  email: z.string().min(1, "El email es requerido").pipe(
-    z.email({
-      message: "Invalid email",
-    }),
-  ),
-  password: z.string().min(1, "La contraseña es requerida"),
-});
-// Esquema para actualizar perfil
-export const UpdateProfile = z.object({
-  name: z.string().max(100, "Name cannot have more than 100 char").optional(),
-  email: z.string().pipe(
-    z.email({
-      message: "Invalid email",
-    }),
-  ).optional(),
-  phone: z.string().max(20, "Phone number cannot have more than 10 numbers").regex(/^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/, "password should match 123-456-7890").optional(),
-  image: z.string().max(255, "Image URL cannot have more than 255 char").optional(),
-
-});
-// Esquema para actualizar contrasena
-export const UpdatePassword = z.object({
-  currentPassword: z.string().min(1, "La contraseña actual es requerida"),
-  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La nueva contraseña debe contener al menos una mayúscula,<br> una minúscula y un número"),
-  confirmNewPassword: z.string(),
-}).refine(data => data.password === data.confirmNewPassword, {
-  message: "Las nuevas contraseñas no coinciden",
-  path: ["confirmNewPassword"],
-});
-// Tipos
-export type InsertUser = z.infer<typeof InsertUser>;
-export type RegisterData = z.infer<typeof RegisterUser>;
-export type LoginData = z.infer<typeof LoginUser>;
-export type UpdateProfile = z.infer<typeof UpdateProfile>;
-export type UpdatePassword = z.infer<typeof UpdatePassword>;
