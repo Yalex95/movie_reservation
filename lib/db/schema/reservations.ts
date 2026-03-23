@@ -11,7 +11,7 @@ import { showtime } from "./showtime";
 
 export const reservations = pgTable("reservations", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-  user_id: integer("user_id").notNull().references(() => user.id),
+  user_id: text("user_id").notNull().references(() => user.id),
   showtime_id: integer("showtime_id").notNull().references(() => showtime.id),
   status: text("status"),
   createdAt: integer("created_at").notNull().$default(() => Date.now()),

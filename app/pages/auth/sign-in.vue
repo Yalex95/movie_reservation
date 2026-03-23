@@ -113,6 +113,6 @@ const onSubmit = handleSubmit(async (values) => {
 .sign-in {
   background:
     linear-gradient(rgb(1 69 107 / 68%), rgb(0 0 0 / 81%)),
-    url(./assets/cinema_vip.jpg) center / cover no-repeat;
+    url(/assets/cinema_vip.jpg) center / cover no-repeat;
 }
 </style>

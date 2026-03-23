@@ -5,6 +5,6 @@ export default defineNuxtRouteMiddleware(async(to, from) => {
   
 
   const { data: session } = await authClient.useSession(useFetch); 
-	console.log("SESSION",session)
+	console.log("SESSION",session.value)
 
 });
