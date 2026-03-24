@@ -4,19 +4,22 @@ import type { FetchError } from "ofetch";
 import { toTypedSchema } from "@vee-validate/zod";
 import { authClient } from "~~/lib/auth-client";
 import { RegisterUser } from "~~/lib/db/schema";
-
 const loading = ref(false);
 const session = authClient.useSession();
 
-const { handleSubmit, errors, setErrors } = useForm({
+const { handleSubmit, errors, setErrors , setFieldValue, values} = useForm({
   validationSchema: toTypedSchema(RegisterUser),
   initialValues: {
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
+    // acceptedTerms: false,
   },
+  validateOnMount: false
+
 });
+
 const submitError = ref("");
 const onSubmit = handleSubmit(async (values) => {
   loading.value = true;
@@ -28,6 +31,7 @@ const onSubmit = handleSubmit(async (values) => {
       password: values.password,
       name: values.name,
       confirmPassword: values.confirmPassword,
+      acceptedTerms: values.acceptedTerms,
     };
     const { error } = await authClient.signUp.email(form);
     if (error) {
@@ -91,19 +95,6 @@ const onSubmit = handleSubmit(async (values) => {
               name="email"
               :disabled="loading"
             />
-            <!-- <AppFormField
-              :error="errors.password"
-              label="Password"
-              name="password"
-              type="password"
-              :disabled="loading"
-            />
-            <AppFormField
-              :error="errors.confirmPassword"
-              label="Confirm Password"
-              name="confirmPassword"
-              :disabled="loading"
-            /> -->
             <AppUiFormPassword
               :error="errors.password"
               label="Password"
@@ -118,7 +109,9 @@ const onSubmit = handleSubmit(async (values) => {
             />
           </div>
           <AppCheckBox
+            name="acceptedTerms"
             checkbox-class="checkbox-info border-gray-100 checkbox-sm"
+            :disabled="loading"
           >
             <template #label>
               <label class="fieldset-legend">

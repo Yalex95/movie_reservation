@@ -28,6 +28,8 @@ export const user = pgTable("user", {
   banExpires: timestamp("ban_expires"),
   phone: text("phone"),
   is_active: boolean("is_active"),
+  acceptedTerms: boolean("accepted_terms").notNull().default(false),
+  acceptedTermsAt: timestamp("accepted_terms_at"),
 });
 // add DOB
 export const session = pgTable(
@@ -136,7 +138,10 @@ export const InsertUser = createInsertSchema(user, {
 
 // schema for account
 export const insertAccoutSchema = z.object({
-  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La contraseña debe contener al menos una mayúscula,<br> una minúscula y un número"),
+  password: z.string().min(8, "Password must have at least 8 char").max(100, "password cannot have more than 100 char").regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "La contraseña debe contener al menos una mayúscula, una minúscula y un número"),
+  acceptedTerms: z.boolean().refine(val => val === true, {
+    message: "You must accept the terms and conditions",
+  }),
 });
 
 // merge accout and user
