@@ -1,5 +1,10 @@
 import { relations } from "drizzle-orm";
-import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+  boolean,
+  integer,
+  pgTable,
+  text,
+} from "drizzle-orm/pg-core";
 
 import { cast } from "./cast";
 import { genere } from "./genere";
@@ -7,34 +12,34 @@ import { language } from "./language";
 import { projection_format } from "./projection-format";
 import { showtime } from "./showtime";
 
-export const movie = sqliteTable("movie", {
-  id: int().primaryKey({ autoIncrement: true }),
-  title: text().notNull().unique(),
-  description: text(),
-  duration: text(),
-  poster_image: text(),
-  trailer_url: text(),
-  content_rating: text({
+export const movie = pgTable("movie", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  title: text("title").notNull().unique(),
+  description: text("description"),
+  duration: text("duration"),
+  poster_image: text("poster_image"),
+  trailer_url: text("trailer_url"),
+  content_rating: text("content_rating", {
     enum: ["AA", "A", "B15", "C", "D"],
   }).default("AA"),
-  release_status: text({
+  release_status: text("release_status", {
     enum: ["now_showing", "coming_soon", "archived"],
   }).default("coming_soon"),
-  release_date: text(), // Fecha oficial de estreno
-  start_showing_date: text(), // Cuando empieza en cartelera
-  end_showing_date: text(), // Cuando sale de cartelera
-  is_featured: int({ mode: "boolean" }).default(false), // Película destacada
-  is_now_showing: int({ mode: "boolean" }).default(false), // esta en cartelera
+  release_date: text("realease_date"), // Fecha oficial de estreno
+  start_showing_date: text("start_showing_date"), // Cuando empieza en cartelera
+  end_showing_date: text("end_showing_date"), // Cuando sale de cartelera
+  is_featured: boolean().default(false), // Película destacada
+  is_now_showing: boolean().default(false), // esta en cartelera
 });
 /**
  * PIVOT TABLES
  */
 
 // movie generes
-export const movie_genres = sqliteTable("movie_genres", {
-  id: int().primaryKey({ autoIncrement: true }),
-  movieId: int("movie_id").references(() => movie.id),
-  genreId: int("genre_id").references(() => genere.id),
+export const movie_genres = pgTable("movie_genres", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  movieId: integer("movie_id").references(() => movie.id),
+  genreId: integer("genre_id").references(() => genere.id),
 });
 
 export const movieGeneresRelations = relations(movie_genres, ({ one }) => ({
@@ -49,10 +54,10 @@ export const movieGeneresRelations = relations(movie_genres, ({ one }) => ({
 }));
 
 // movie languages
-export const movie_languages = sqliteTable("movie_languages", {
-  id: int().primaryKey({ autoIncrement: true }),
-  movieId: int("movie_id").references(() => movie.id),
-  languageId: int("language_id").references(() => language.id),
+export const movie_languages = pgTable("movie_languages", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  movieId: integer("movie_id").references(() => movie.id),
+  languageId: integer("language_id").references(() => language.id),
 });
 
 export const movieLanguagesRelations = relations(movie_languages, ({ one }) => ({
@@ -67,10 +72,10 @@ export const movieLanguagesRelations = relations(movie_languages, ({ one }) => (
 }));
 
 // movie formats
-export const movie_projection_formats = sqliteTable("movie_projection_formats", {
-  id: int().primaryKey({ autoIncrement: true }),
-  movieId: int("movie_id").references(() => movie.id),
-  formatId: int("format_id").references(() => projection_format.id),
+export const movie_projection_formats = pgTable("movie_projection_formats", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  movieId: integer("movie_id").references(() => movie.id),
+  formatId: integer("format_id").references(() => projection_format.id),
 });
 export const movieFormatRelations = relations(movie_projection_formats, ({ one }) => ({
   movie: one(movie, {

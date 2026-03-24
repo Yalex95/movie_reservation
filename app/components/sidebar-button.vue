@@ -16,7 +16,7 @@ const props = defineProps<{
   <div :class="{ 'tooltip  tooltip-right': !props.showLabel }" :data-tip="props.showLabel ? undefined : props.label">
     <NuxtLink
       :to="href || to"
-      :class="{ 'bg-base-200': props.isActive, 'justify-start': showLabel, 'justify-center': !showLabel }"
+      :class="{ 'bg-base-300': props.isActive, 'justify-start': showLabel, 'justify-center': !showLabel }"
       class="flex gap-2 p-2 cursor-pointer hover:bg-base-300 flex-nowrap"
     >
       <Icon

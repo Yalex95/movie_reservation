@@ -1,16 +1,23 @@
 import { relations } from "drizzle-orm";
-import { int, sqliteTable } from "drizzle-orm/sqlite-core";
+import {
+  integer,
+  pgTable,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 import { cinema_room } from "./cinema-room";
 import { movie } from "./movie";
 import { pricing } from "./pricing";
 import { reservations } from "./reservations";
 
-export const showtime = sqliteTable("showtime", {
-  id: int().primaryKey({ autoIncrement: true }),
-  movie_id: int().notNull().references(() => movie.id),
-  cinema_room_id: int().notNull().references(() => cinema_room.id),
-  start_datetime: int().notNull(),
+export const showtime = pgTable("showtime", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  movie_id: integer("movie_id").notNull().references(() => movie.id),
+  cinema_room_id: integer("cinema_room_id").notNull().references(() => cinema_room.id),
+  start_datetime: timestamp("start_datetime", {
+    withTimezone: true,
+    mode: "string",
+  }).notNull(),
 });
 
 export const showtimeRelation = relations(showtime, ({ one, many }) => ({

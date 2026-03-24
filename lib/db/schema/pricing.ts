@@ -1,14 +1,18 @@
 import { relations } from "drizzle-orm";
-import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+  integer,
+  pgTable,
+  text,
+} from "drizzle-orm/pg-core";
 
 import { showtime } from "./showtime";
 
-export const pricing = sqliteTable("pricing", {
-  id: int().primaryKey({ autoIncrement: true }),
-  showtime_id: int().notNull().references(() => showtime.id),
-  price: int(),
-  currency: text(),
-  base_price: int(),
+export const pricing = pgTable("pricing", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  showtime_id: integer("showtime_id").notNull().references(() => showtime.id),
+  price: integer("price"),
+  currency: text("currency"),
+  base_price: integer("base_price"),
 });
 
 export const pricingReservation = relations(pricing, ({ one }) => ({

@@ -68,7 +68,7 @@ async function onUpdatePassword(values: UpdatePassword) {
         <div class="flex gap-10">
           <AppAvatar
             :avatar="authStore?.user?.image"
-            :place-holder="authStore?.user?.name?.charAt(0)?.toUpperCase()"
+            
             :name="authStore?.user?.name"
           />
           <div class="flex justify-center flex-col">

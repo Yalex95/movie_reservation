@@ -7,9 +7,8 @@ export default defineConfig({
   out: "./lib/migrations",
   schema: "./lib/db/schema/index.ts",
   casing: "snake_case",
-  dialect: "turso",
+  dialect: "postgresql",
   dbCredentials: {
-    url: env.TURSO_DATABASE_URL,
-    authToken: env.NODE_ENV === "development" ? undefined : env.TURSO_AUTH_TOKEN,
+    url: env.DATABASE_URL,
   },
 });

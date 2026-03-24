@@ -11,6 +11,10 @@ effect(() => {
         id: "link-dashboard",
         label: "Dashboard",
         to: "/dashboard",
+      }, {
+        id: "link-movies",
+        label: "Movies",
+        to: "/",
       }];
     }
     else { // regular user
@@ -62,7 +66,10 @@ effect(() => {
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
         <li v-for="item in navbarStore.navbarItems" :key="item.id">
-          <NuxtLink :to="item.to">
+          <NuxtLink
+            :to="item.to"
+            :class="[{ 'bg-base-300': route.path === item.to }]"
+          >
             {{ item.label }}
           </NuxtLink>
         </li>
@@ -73,7 +80,7 @@ effect(() => {
       <NuxtLink
         v-if="!authStore.user"
         class="btn "
-        :to="route.path.includes('sign-up') ? '/sign-in' : '/sign-up'"
+        :to="route.path.includes('sign-up') ? '/auth/sign-in' : '/auth/sign-up'"
       >
         {{ route.path.includes('sign-up') ? 'Login' : 'Sign up' }}
       </NuxtLink>
@@ -93,7 +100,7 @@ effect(() => {
             class="btn btn-ghost btn-circle avatar"
             name-class="text-sm font-bold"
             :avatar="authStore?.user?.image"
-            :place-holder="authStore?.user?.name?.charAt(0)?.toUpperCase()"
+           
             :name="authStore?.user?.name"
           />
           <ul

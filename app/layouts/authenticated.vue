@@ -12,7 +12,7 @@ onMounted(async () => {
   session.value = await authClient.getSession();
 });
 effect(() => {
-  if (session.value?.data?.user?.role === "admin" && !route.path.startsWith('/profile')) { // validate user role
+  if (session.value?.data?.user?.role === "admin" && !route.path.startsWith("/profile")) { // validate user role
     sidebarStore.sidebarItems = [{
       id: "link-dashboard-overview",
       label: "Overview",
@@ -21,38 +21,37 @@ effect(() => {
     }, {
       id: "link-Movies",
       label: "Movies",
-      href: "/dashboard/movies",
+      href: "/movies",
       icon: "bx:bxs-movie-play",
     }, {
       id: "link-showtimes",
       label: "Showtimes",
-      href: "/dashboard/showtimes",
+      href: "/showtimes",
       icon: "ic:round-access-time-filled",
     }, {
       id: "link-rooms",
       label: "Rooms",
-      href: "/dashboard/rooms",
+      href: "/rooms",
       icon: "ic:baseline-meeting-room",
     }, {
       id: "link-users",
-      label: "Users",
-      href: "/dashboard/users",
+      label: "Staff",
+      href: "/staff",
       icon: "material-symbols:groups-2",
     }];
-  }else if(route.path.startsWith('/profile')){
+  }
+  else if (route.path.startsWith("/profile")) {
     sidebarStore.sidebarItems = [{
       id: "link-personal-info",
       label: "Personal Info",
       href: "/profile",
       icon: "material-symbols:person-outline",
-    },
-    {
+    }, {
       id: "link-security",
       label: "Security",
       href: "#security",
       icon: "ic:outline-security",
-    },
-  ];
+    }];
   }
 });
 
@@ -105,7 +104,7 @@ function toggleSidebar() {
               :icon="item.icon"
               :href="item.href"
               :to="item.to"
-              :is-active="route.path === item.href"
+              :is-active="route.path.includes(item?.href || '')"
             />
 
             <div class="divider" />
@@ -114,7 +113,7 @@ function toggleSidebar() {
               :show-label="isSidebarOpen"
               label="Login"
               icon="tabler:login"
-              href="/sign-in"
+              href="/auth/sign-in"
             />
             <SidebarButton
               v-else

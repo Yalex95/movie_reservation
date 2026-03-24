@@ -21,13 +21,12 @@ export const useAuthStore = defineStore("useAuthStore", () => {
   const loading = computed(() => session.value?.isPending);
 
   async function signIn(form: SignInForm) {
-    await authClient.signIn.email({
+    return await authClient.signIn.email({
       email: form.email,
       password: form.password,
       rememberMe: true,
       callbackURL: "/auth/callback",
     });
-    // await init();
   }
 
   async function signOut() {

@@ -1,7 +1,6 @@
+import { authClient } from "~~/lib/auth-client";
 
-
-export default defineNuxtRouteMiddleware((to, from) => {
-  // const nuxtApp = useNuxtApp();
-  // const userFromServer = nuxtApp.ssrContext?.event?.context?.user;
-  
+export default defineNuxtRouteMiddleware(async () => {
+  const { data: session } = await authClient.useSession(useFetch);
+  console.error("SESSION", session.value);
 });

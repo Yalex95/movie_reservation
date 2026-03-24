@@ -1,14 +1,17 @@
 import { relations } from "drizzle-orm";
-import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+  integer,
+  pgTable,text,
+} from "drizzle-orm/pg-core";
 
 import { actor } from "./actor";
 import { movie } from "./movie";
 
-export const cast = sqliteTable("cast", {
-  id: int().primaryKey({ autoIncrement: true }),
-  actor_id: int().notNull().references(() => actor.id, { onDelete: "cascade" }),
-  movie_id: int().notNull().references(() => movie.id, { onDelete: "cascade" }),
-  character_name: text().notNull(),
+export const cast = pgTable("cast", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  actor_id: integer("actor_id").notNull().references(() => actor.id, { onDelete: "cascade" }),
+  movie_id: integer("movie_id").notNull().references(() => movie.id, { onDelete: "cascade" }),
+  character_name: text("character_name").notNull(),
   roleOrder: text("role_order").notNull(),
 
 });

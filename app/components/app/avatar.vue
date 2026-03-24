@@ -9,7 +9,6 @@ withDefaults(
   }>(),
   {
     size: "w-48",
-    placeHolder: "U",
     name: "User Avatar",
     nameClass: "text-4xl font-bold",
   },
@@ -33,7 +32,7 @@ const attrs = useAttrs();
         :alt="name"
         :src="avatar"
       >
-      <span v-else :class="[nameClass]">{{ placeHolder }}</span>
+      <span v-else :class="[nameClass]">{{ name.charAt(0)?.toUpperCase() }}</span>
     </div>
   </div>
 </template>

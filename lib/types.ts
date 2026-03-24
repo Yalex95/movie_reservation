@@ -1,3 +1,4 @@
+import type { Component } from "vue";
 import type { RouteLocationRaw } from "vue-router";
 
 export type navItems = {
@@ -7,6 +8,10 @@ export type navItems = {
   href?: string;// ? is optional
   to?: RouteLocationRaw;
 };
+export type NavItemLink = Omit<navItems, "href" | "icon"> & {
+  icon?: string;
+};
+
 export type Password = {
   password: string;
   confirmNewPassword: string;
@@ -25,10 +30,25 @@ export type AppUser = {
   role?: string | null;
   is_active?: boolean;
 };
-export type Profile ={
-  name?: string,
-  phone?: string,
-  email?: string,
-  image?: string
-  //dob: string
-}
+export type Profile = {
+  name?: string;
+  phone?: string;
+  email?: string;
+  image?: string;
+  // dob: string
+};
+
+export const ROLES = ["regular", "admin"] as const;
+export type Role = (typeof ROLES)[number];
+
+export type ButtonItem = {
+  label: string;
+  value: string;
+  active: boolean;
+};
+
+export type Tab = {
+  label: string;
+  component: Component;
+  props?: Record<string, any>;
+};

@@ -61,7 +61,7 @@ const onSubmit = handleSubmit(async (values) => {
             <p>Create your account to manage bookings, save your favorite movies and earn exlisive rewards.</p>
           </div>
           <NuxtLink
-            to="/sign-in"
+            to="/auth/sign-in"
             class="btn md:flex hidden"
           >
             <Icon name="heroicons:arrow-left" />
@@ -91,7 +91,7 @@ const onSubmit = handleSubmit(async (values) => {
               name="email"
               :disabled="loading"
             />
-            <AppFormField
+            <!-- <AppFormField
               :error="errors.password"
               label="Password"
               name="password"
@@ -99,6 +99,18 @@ const onSubmit = handleSubmit(async (values) => {
               :disabled="loading"
             />
             <AppFormField
+              :error="errors.confirmPassword"
+              label="Confirm Password"
+              name="confirmPassword"
+              :disabled="loading"
+            /> -->
+            <AppUiFormPassword
+              :error="errors.password"
+              label="Password"
+              name="password"
+              :disabled="loading"
+            />
+            <AppUiFormPassword
               :error="errors.confirmPassword"
               label="Confirm Password"
               name="confirmPassword"
@@ -128,7 +140,7 @@ const onSubmit = handleSubmit(async (values) => {
               <span v-if="loading" class="loading loading-spinner loading-xs" />
             </button>
             <p class="text-sm md:text-start text-center text-gray-300 md:col-span-3 my-auto">
-              Already have an account? <NuxtLink class="font-semibold text-blue-500" to="/sign-in">
+              Already have an account? <NuxtLink class="font-semibold text-blue-500" to="/auth/sign-in">
                 Login here
               </NuxtLink>
             </p>
@@ -163,6 +175,6 @@ const onSubmit = handleSubmit(async (values) => {
 .sign-up {
   background:
     linear-gradient(rgb(1 69 107 / 68%), rgb(0 0 0 / 81%)),
-    url(./assets/cinema_vip.jpg) center / cover no-repeat;
+    url(/assets/cinema_vip.jpg) center / cover no-repeat;
 }
 </style>

@@ -1,16 +1,10 @@
 <script lang="ts" setup>
-import { authClient } from "~~/lib/auth-client";
-
 const authStore = useAuthStore();
 
 const isSidebarOpen = ref(true);
 const sidebarStore = useSidebarStore();
 const route = useRoute();
-const session = ref();
 
-onMounted(async () => {
-  session.value = await authClient.getSession();
-});
 effect(() => {
   if (route.path === "/") {
     sidebarStore.sidebarItems = [{
@@ -70,11 +64,11 @@ function toggleSidebar() {
 
         <div class="divider" />
         <SidebarButton
-          v-if="!session?.data?.user"
+          v-if="!authStore?.user"
           :show-label="isSidebarOpen"
           label="Login"
           icon="tabler:login"
-          href="/sign-in"
+          href="/auth/sign-in"
         />
         <SidebarButton
           v-else
