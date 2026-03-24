@@ -1,16 +1,19 @@
 import { relations } from "drizzle-orm";
-import { int, sqliteTable } from "drizzle-orm/sqlite-core";
+import {
+  integer,
+  pgTable,
+} from "drizzle-orm/pg-core";
 
 import { reservations } from "./reservations";
 import { seat } from "./seat";
 import { showtime } from "./showtime";
 
-export const seat_reservation = sqliteTable("seat_reservation", {
-  id: int().primaryKey({ autoIncrement: true }),
-  reservation_id: int().notNull().references(() => reservations.id, { onDelete: "cascade" }),
-  seat_id: int().notNull().references(() => seat.id),
-  showtime_id: int().notNull().references(() => showtime.id),
-  price_paid: int(),
+export const seat_reservation = pgTable("seat_reservation", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  reservation_id: integer("reservation_id").notNull().references(() => reservations.id, { onDelete: "cascade" }),
+  seat_id: integer("seat_id").notNull().references(() => seat.id),
+  showtime_id: integer("showtime_id").notNull().references(() => showtime.id),
+  price_paid: integer("price_paid"),
 });
 
 export const seatReservationRelation = relations(seat_reservation, ({ one }) => ({

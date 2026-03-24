@@ -1,6 +1,6 @@
 import { and, eq, like } from "drizzle-orm";
 
-import db from "..";
+import {db} from "..";
 import { genere, movie, movie_genres } from "../schema";
 
 type FindMoviesParams = {
