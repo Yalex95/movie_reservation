@@ -7,16 +7,16 @@ import { RegisterUser } from "~~/lib/db/schema";
 const loading = ref(false);
 const session = authClient.useSession();
 
-const { handleSubmit, errors, setErrors , setFieldValue, values} = useForm({
+const { handleSubmit, errors, setErrors } = useForm({
   validationSchema: toTypedSchema(RegisterUser),
   initialValues: {
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    // acceptedTerms: false,
+    acceptedTerms: false,
   },
-  validateOnMount: false
+  // validateOnMount: false
 
 });
 
