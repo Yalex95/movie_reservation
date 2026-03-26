@@ -7,10 +7,6 @@ const props = defineProps<{
   user: AppUser | null | undefined;
 }>();
 
-const emit = defineEmits<{
-  signout: [];
-}>();
-
 const componentTag = computed(() => props.type === "avatar"
   ? resolveComponent("AtomsAvatar")
   : resolveComponent("AtomsButtons"));
@@ -29,54 +25,31 @@ const componentAttrs = computed(() => {
     size: "md",
   };
 });
-
+// TODO:move this component to molecules
 const Open = ref(false);
-function handleSignOut() {
-  emit("signout");
-}
+
 function toggleDropdown() {
   Open.value = !Open.value;
 }
 </script>
 
 <template>
-  <div class="dropdown" :class="{ 'dropdown-open': Open }">
-    <!-- <AtomsButton
-      class="lg:hidden"
-      variant="ghost"
-      size="sm"
-    >
-      <Icon name="mdi:chevron-down" size="24" />
-    </AtomsButton> -->
+  <div class="relative">
     <component
       :is="componentTag"
       v-bind="componentAttrs"
       @click="toggleDropdown"
     >
-      <!-- <slot /> -->
+      <span v-if="$slots.icon">
+        <slot name="icon" />
+      </span>
     </component>
     <ul
-      class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+      class="absolute bg-base-100 rounded-box z-1 w-52 p-2 shadow-lg flex flex-col
+       right-0"
       :class="{ hidden: !Open }"
     >
-      <li>
-        <AtomsButton
-          variant="link"
-          size="md"
-          to="/profile"
-        >
-          Profile
-        </AtomsButton>
-      </li>
-      <li>
-        <AtomsButton
-          variant="ghost"
-          size="md"
-          @click="handleSignOut"
-        >
-          LogOut
-        </AtomsButton>
-      </li>
+      <slot name="list" />
     </ul>
   </div>
 </template>
