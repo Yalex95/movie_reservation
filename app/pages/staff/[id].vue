@@ -50,7 +50,7 @@ const breadCrumbs: Array<NavItemLink> = [
     <div class="container   gap-6 flex flex-1 min-h-0 overflow-auto">
       <div class="w-1/4 grid grid-cols-1 gap-6">
         <div class="card bg-base-100 rounded-md  shadow-sm  items-center p-10 gap-4">
-          <AppAvatar :avatar="user?.image" :name="user?.name" />
+          <AtomsAvatar :avatar="user?.image" :name="user?.name" />
           <div class="card-body w-full items-center  p-0">
             <h2 class="card-title">
               {{ user?.name }}

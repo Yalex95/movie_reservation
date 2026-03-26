@@ -35,6 +35,7 @@ export type Profile = {
   phone?: string;
   email?: string;
   image?: string;
+  role?: string;
   // dob: string
 };
 

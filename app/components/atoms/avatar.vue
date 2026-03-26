@@ -14,14 +14,14 @@ withDefaults(
   },
 );
 
-const attrs = useAttrs();
+
 </script>
 
 <template>
   <div
     class="avatar"
     :class="[{ 'avatar-placeholder': !avatar }]"
-    v-bind="attrs"
+
   >
     <div
       class="  rounded-full "

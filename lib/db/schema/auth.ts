@@ -185,3 +185,4 @@ export type RegisterData = z.infer<typeof RegisterUser>;
 export type LoginData = z.infer<typeof LoginUser>;
 export type UpdateProfile = z.infer<typeof UpdateProfile>;
 export type UpdatePassword = z.infer<typeof UpdatePassword>;
+// export type authUser = z.infer<typeof user>;

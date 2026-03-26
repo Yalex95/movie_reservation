@@ -1,28 +1,59 @@
 <script lang="ts" setup>
 const authStore = useAuthStore();
 
-const isSidebarOpen = ref(true);
+const isSidebarOpen = ref(false);
 const sidebarStore = useSidebarStore();
-const route = useRoute();
+const defaultNavigation = [
+  {
+    id: "link-dashboard",
+    label: "Browse Movies",
+    href: "/",
+    icon: "material-symbols-light:grid-on-sharp",
+  },
 
+];
 effect(() => {
-  if (route.path === "/") {
-    sidebarStore.sidebarItems = [{
-      id: "link-dashboard",
-      label: "Browse Movies",
-      href: "/",
-      icon: "material-symbols-light:grid-on-sharp",
-    }, {
-      id: "link-location-ad",
-      label: "My Bookings",
-      href: "/",
-      icon: "majesticons:ticket",
-    }, {
-      id: "link-location-ad",
-      label: "Watchlist",
-      href: "/",
-      icon: "stash:save-ribbon-solid",
-    }];
+  if (authStore.user) {
+    if (authStore.user?.role === "admin") {
+      sidebarStore.sidebarItems = [...defaultNavigation, {
+        id: "link-dashboard",
+        label: "Dashboard",
+        href: "/dashboard",
+        icon: "stash:save-ribbon-solid",
+      }, {
+        id: "link-movies",
+        label: "Movies",
+        href: "/",
+        icon: "stash:save-ribbon-solid",
+
+      }, {
+        id: "link-location-ad",
+        label: "My Bookings",
+        href: "/",
+        icon: "majesticons:ticket",
+      }, {
+        id: "link-location-ad",
+        label: "Watchlist",
+        href: "/",
+        icon: "stash:save-ribbon-solid",
+      }];
+    }
+    else { // regular user
+      sidebarStore.sidebarItems = [...defaultNavigation, {
+        id: "link-home",
+        label: "Home",
+        href: "/",
+        icon: "stash:save-ribbon-solid",
+      }, {
+        id: "link-bookings",
+        label: "My Bookings",
+        href: "/bookings",
+        icon: "stash:save-ribbon-solid",
+      }];
+    }
+  }
+  else {
+    sidebarStore.sidebarItems = [...defaultNavigation];
   }
 });
 
@@ -33,11 +64,11 @@ function toggleSidebar() {
 </script>
 
 <template>
-  <div class="flex-1 flex min-h-0">
-    <div class="bg-base-100 transition-all duration-300 shrink-0" :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }">
+  <div class="flex-1 flex min-h-0 ">
+    <div class="hidden md:block bg-base-100 transition-all duration-300 shrink-0" :class="{ 'w-64': isSidebarOpen, 'w-16': !isSidebarOpen }">
       <div
         class="flex hover:cursor-pointer hover:bg-base-200 p-2"
-        :class="{ 'justify-center': !isSidebarOpen, 'justify-end': isSidebarOpen }"
+        :class="{ 'justify-center': !isSidebarOpen, 'justify-start': isSidebarOpen }"
         @click="toggleSidebar"
       >
         <Icon

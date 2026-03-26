@@ -2,7 +2,7 @@
 import { authClient } from "~~/lib/auth-client";
 
 const authStore = useAuthStore();
-
+//TODO: fix sidebar menus
 const isSidebarOpen = ref(true);
 const sidebarStore = useSidebarStore();
 const route = useRoute();

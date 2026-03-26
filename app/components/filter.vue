@@ -10,7 +10,7 @@ withDefaults(defineProps<{
 }>(), {
   searchPlaceholder: "Search",
 });
-//alternative, more succinct syntax
+// alternative, more succinct syntax
 const emit = defineEmits<{
   "btnClick": [value: string ];
   "update:modelValue": [value: string];
@@ -27,7 +27,7 @@ const emit = defineEmits<{
     />
     <div class="flex justify-between">
       <div class="inline-flex gap-4">
-        <button
+        <!-- <button
           v-for="(button, index) in btnGroup"
           :key="index"
           class="btn capitalize"
@@ -35,7 +35,16 @@ const emit = defineEmits<{
           @click="emit('btnClick', button.value)"
         >
           {{ button.label }}
-        </button>
+        </button> -->
+        <AtomsButton
+          v-for="(button, index) in btnGroup"
+          :key="index"
+          variant="ghost"
+          size="md"
+          @click="emit('btnClick', button.value)"
+        >
+          {{ button.label }}
+        </AtomsButton>
       </div>
       <div class="inline-flex gap-4">
         <button class="btn btn-ghost">

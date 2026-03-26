@@ -66,7 +66,7 @@ async function onUpdatePassword(values: UpdatePassword) {
       </div>
       <div class="container flex justify-between p-8 bg-base-100 rounded-lg border border-gray-700">
         <div class="flex gap-10">
-          <AppAvatar
+          <AtomsAvatar
             :avatar="authStore?.user?.image"
             
             :name="authStore?.user?.name"
