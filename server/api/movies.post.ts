@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
   if (session) {
     // access the session.session && session.user
     
+    
   }else {
     throw new Error("Unauthorized");
   }

@@ -51,7 +51,7 @@ defineProps<{ user: AppUser }>();
     </section>
     <section>
       <AppHeader header="Last Login Details" icon="streamline-ultimate:synchronize-arrows-three-bold" />
-      <AppTable :headers="['device', 'ip address', 'time', 'status']">
+      <MoleculesTable :headers="['device', 'ip address', 'time', 'status']">
         <template #body>
           <tr>
             <td>Chrome on MacOS</td>
@@ -64,7 +64,7 @@ defineProps<{ user: AppUser }>();
             </td>
           </tr>
         </template>
-      </AppTable>
+      </MoleculesTable>
     </section>
   </div>
 </template>

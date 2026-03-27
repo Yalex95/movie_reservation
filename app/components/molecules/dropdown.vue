@@ -25,16 +25,20 @@ const componentAttrs = computed(() => {
     size: "md",
   };
 });
-// TODO:move this component to molecules
-const Open = ref(false);
 
+const Open = ref(false);
 function toggleDropdown() {
   Open.value = !Open.value;
 }
+
+const dropDown = ref(null);
+onClickOutside(dropDown, () => {
+  Open.value = false;
+});
 </script>
 
 <template>
-  <div class="relative">
+  <div ref="dropDown" class="relative">
     <component
       :is="componentTag"
       v-bind="componentAttrs"

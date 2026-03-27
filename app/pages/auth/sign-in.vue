@@ -3,7 +3,10 @@ import type { FetchError } from "ofetch";
 
 import { toTypedSchema } from "@vee-validate/zod";
 import { LoginUser } from "~~/lib/db/schema";
-import { Field } from "vee-validate";
+
+definePageMeta({
+  layout: "auth",
+});
 
 const auth = useAuthStore();
 const loading = ref(false);
@@ -64,7 +67,7 @@ const onSubmit = handleSubmit(async (values) => {
           name="email"
           :disabled="loading"
         />
-       
+
         <AppUiFormPassword
           :error="errors.password"
           label="Password"
@@ -72,7 +75,8 @@ const onSubmit = handleSubmit(async (values) => {
           :disabled="loading"
         />
         <div class="flex gap-4 justify-between items-center">
-          <AppCheckBox
+          <MoleculesCheckBox
+            name="remenerMe"
             checkbox-class="checkbox-info border-gray-100 checkbox-sm"
           >
             <template #label>
@@ -80,7 +84,7 @@ const onSubmit = handleSubmit(async (values) => {
                 Remember me
               </label>
             </template>
-          </AppCheckBox>
+          </MoleculesCheckBox>
           <NuxtLink to="/" class="text-sm text-blue-500 font-semibold">
             Forgot password
           </NuxtLink>

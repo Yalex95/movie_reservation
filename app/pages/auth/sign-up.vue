@@ -4,6 +4,11 @@ import type { FetchError } from "ofetch";
 import { toTypedSchema } from "@vee-validate/zod";
 import { authClient } from "~~/lib/auth-client";
 import { RegisterUser } from "~~/lib/db/schema";
+
+definePageMeta({
+  layout: "auth",
+});
+
 const loading = ref(false);
 const session = authClient.useSession();
 
@@ -16,9 +21,9 @@ const { handleSubmit, errors, setErrors } = useForm({
     confirmPassword: "",
     acceptedTerms: false,
   },
-  // validateOnMount: false
 
 });
+
 
 const submitError = ref("");
 const onSubmit = handleSubmit(async (values) => {
@@ -108,7 +113,7 @@ const onSubmit = handleSubmit(async (values) => {
               :disabled="loading"
             />
           </div>
-          <AppCheckBox
+          <MoleculesCheckBox
             name="acceptedTerms"
             checkbox-class="checkbox-info border-gray-100 checkbox-sm"
             :disabled="loading"
@@ -122,7 +127,7 @@ const onSubmit = handleSubmit(async (values) => {
                 </NuxtLink>, including receipt od promotianal movie updatre
               </label>
             </template>
-          </AppCheckBox>
+          </MoleculesCheckBox>
           <!-- chechbox -->
           <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <button

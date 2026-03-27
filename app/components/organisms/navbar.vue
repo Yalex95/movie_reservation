@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 const authStore = useAuthStore();
 const route = useRoute();
+
+const redirectUser = computed(() => route.path.includes("sign-up") ? "/auth/sign-in" : "/auth/sign-up");
+const buttonLabel = computed(() => route.path.includes("sign-up") ? "Login" : "Sign up");
 </script>
 
 <template>
@@ -16,16 +19,16 @@ const route = useRoute();
     </div>
 
     <div class="navbar-end">
-      <AtomsThemeToggle />
+      <MoleculesThemeToggle />
       <AtomsButton
         v-if="!authStore.user"
         variant="ghost"
         size="md"
-        :to="route.path.includes('sign-up') ? '/auth/sign-in' : '/auth/sign-up'"
+        :to="redirectUser"
       >
-        {{ route.path.includes('sign-up') ? 'Login' : 'Sign up' }}
+        {{ buttonLabel }}
       </AtomsButton>
-      <MoleculesNavbarUserSection :user="authStore.user" />
+      <MoleculesNavbarUserSection v-else :user="authStore.user" />
     </div>
   </div>
 </template>

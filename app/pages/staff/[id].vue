@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import type { NavItemLink, Tab } from "~~/lib/types";
 
-import AppOverview from "~/components/app/overview.vue";
-import AppPermissions from "~/components/app/permissions.vue";
+import OrganismsOverview from "~/components/organisms/overview.vue";
+import OrganismsPermissions from "~/components/organisms/permissions.vue";
 
 const route = useRoute();
 definePageMeta({
@@ -16,12 +16,12 @@ const { data: user } = await useFetch(`/api/user/${route.params.id}`, {
 const tabs: Array<Tab> = [
   {
     label: "Overview",
-    component: AppOverview,
+    component: OrganismsOverview,
     props: { user: user.value },
   },
   {
     label: "Permissions",
-    component: AppPermissions,
+    component: OrganismsPermissions,
     props: { user: user.value },
 
   },

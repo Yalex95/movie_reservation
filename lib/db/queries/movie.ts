@@ -1,6 +1,6 @@
 import { and, eq, like } from "drizzle-orm";
 
-import {db} from "..";
+import { db } from "..";
 import { genere, movie, movie_genres } from "../schema";
 
 type FindMoviesParams = {
@@ -13,7 +13,7 @@ export async function findMovies({
   releaseDate,
   genreId,
 }: FindMoviesParams) {
-  return  db.query.movie.findMany();
+  return db.query.movie.findMany();
   // const conditions = [];
 
   // if (title) {

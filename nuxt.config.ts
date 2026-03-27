@@ -19,6 +19,7 @@ export default defineNuxtConfig({
     "@vee-validate/nuxt",
     "@pinia/nuxt",
     "@nuxtjs/color-mode",
+    "@vueuse/nuxt",
   ],
   eslint: {
     config: {

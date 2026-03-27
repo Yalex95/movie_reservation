@@ -130,7 +130,7 @@ function handlePagination(page: number | undefined, direction: string) {
         @btn-click="applyButtonFilter"
         @update:model-value="(value) => onSearch(value)"
       />
-      <AppTable
+      <MoleculesTable
         :headers
       >
         <template #body>
@@ -196,7 +196,7 @@ function handlePagination(page: number | undefined, direction: string) {
             </td>
           </tr>
         </template>
-      </AppTable>
+      </MoleculesTable>
       <AppModal id="bann">
         <Icon name="material-symbols:group-remove" size="24" />
         <h3 class="text-lg font-bold">
